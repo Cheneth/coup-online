@@ -9,7 +9,10 @@ app.get('/', (req, res) => res.send('Hello World!'));
 
 io.on('connection', function(socket){
     console.log('a user connected');
-    setInterval(() => socket.emit("time", moment().format()), 1000);
+    socket.on('room', function(room) {
+        socket.join(room);
+    });
+    setInterval(() => socket.in('1234').emit("time", moment().format()), 1000);
 });
 
 // app.listen(port, () => console.log(`Coup server listening on port ${port}!`));

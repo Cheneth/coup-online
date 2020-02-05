@@ -24,14 +24,19 @@ gameSocket.on('connection', function(socket){
         "socket_room": `${socket.id}`
     })
     const index = players.length-1
-    socket.on('setName', (name) => {
-        players[index].player = name
-        console.log(players[index])
+
+    const updatePlayerList = () => {
         let updatedPlayers = players.map(x => {
             return {name: x.player, socketID: x._id}
         }).filter(x => x.name != '')
         console.log(updatedPlayers)
         gameSocket.emit('playerJoined', updatedPlayers) 
+    }
+
+    socket.on('setName', (name) => {
+        players[index].player = name
+        console.log(players[index])
+        updatePlayerList()
     })
     console.log(`player ${players.length} has connected`);
     socket.join(players[index].socket_room);
@@ -42,8 +47,12 @@ gameSocket.on('connection', function(socket){
     }, 1000);
     socket.on('disconnect', () => {
         console.log('disconnected: ' + socket.id);
-
-        
+        players.map((x,index) => {
+            if(x._id == socket.id) {
+                players[index].player =''
+            }
+        })
+        updatePlayerList()
     })
 });
 

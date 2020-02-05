@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import io from "socket.io-client";
+import faker from "faker"
 
 // const socket = io('localhost:8000/oneRoom');
 
@@ -16,6 +17,7 @@ export default class socketTest extends Component {
     componentDidMount(){
         const socket = io('localhost:8000/oneRoom');
         console.log('mounted')
+        socket.emit('setName', faker.name.findName())
         socket.on("time", data => {
             console.log('got')
             this.setState({ time: data })

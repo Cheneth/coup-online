@@ -16,20 +16,35 @@ const gameSocket = io.of('/oneRoom')
 let players = []
 
 gameSocket.on('connection', function(socket){
+
     console.log('id: ' + socket.id)
     players.push({
         "_id" : socket.id,
-        "player": players.length,
-        "socket_room": `room${players.length}`
+        "player": '',
+        "socket_room": `${socket.id}`
+    })
+    const index = players.length-1
+    socket.on('setName', (name) => {
+        players[index].player = name
+        console.log(players[index])
+        let updatedPlayers = players.map(x => {
+            return {name: x.player, socketID: x._id}
+        }).filter(x => x.name != '')
+        console.log(updatedPlayers)
+        gameSocket.emit('playerJoined', updatedPlayers) 
     })
     console.log(`player ${players.length} has connected`);
-    socket.join(players[players.length-1].socket_room);
-    console.log('socket joined ' + players[players.length-1].socket_room)
+    socket.join(players[index].socket_room);
+    console.log('socket joined ' + players[index].socket_room)
     setInterval(() => {
-        socket.in(players[players.length-1].socket_room).emit("time", `player${players[players.length-1].player}-${moment().format()}`)
+        socket.in(players[index].socket_room).emit("time", `player${players[index].player}-${moment().format()}`)
         // console.log('emit')
     }, 1000);
-    socket.on('disconnect', (clientID) => console.log('closed: ' + socket.id))
+    socket.on('disconnect', () => {
+        console.log('disconnected: ' + socket.id);
+
+        
+    })
 });
 
 // app.listen(port, () => console.log(`Coup server listening on port ${port}!`));

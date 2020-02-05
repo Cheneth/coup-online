@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import socketIOClient from "socket.io-client";
+import io from "socket.io-client";
 
-const socket = socketIOClient('localhost:8000');
+// const socket = io('localhost:8000/oneRoom');
 
 export default class socketTest extends Component {
 
@@ -13,19 +13,27 @@ export default class socketTest extends Component {
         };
       }
 
+    componentDidMount(){
+        const socket = io('localhost:8000/oneRoom');
+        console.log('mounted')
+        socket.on("time", data => {
+            console.log('got')
+            this.setState({ time: data })
+        });
+        socket.on('disconnected', function() {
+            socket.emit('playerDisconnect', socket.socket.sessionid);
+        });
+    }
+
     doShit = () =>  {
-        socket.on('connect', function() {
-            // Connected, let's sign-up for to receive messages for this room
-            socket.emit('room', '1234');
-         });
-        socket.on("time", data => this.setState({ time: data }));
         console.log('do shit')
     }
 
     render() {
         return (
             <div>
-                <button onClick={this.doShit}>{this.state.time}</button>
+                <p>{this.state.time}</p>
+                {/* <button onClick={this.doShit}>{this.state.time}</button> */}
             </div>
         )
     }

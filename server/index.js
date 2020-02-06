@@ -32,15 +32,15 @@ gameSocket.on('connection', function(socket){
         console.log(updatedPlayers)
         gameSocket.emit('playerJoined', updatedPlayers) 
     }
-
+    console.log(`player ${players.length} has connected`);
+    socket.join(players[index].socket_room);
+    console.log('socket joined ' + players[index].socket_room)
     socket.on('setName', (name) => {
         players[index].player = name
         console.log(players[index])
         updatePlayerList()
+        socket.in(players[index].socket_room).emit("joinSuccess", players[index]._id)
     })
-    console.log(`player ${players.length} has connected`);
-    socket.join(players[index].socket_room);
-    console.log('socket joined ' + players[index].socket_room)
     setInterval(() => {
         socket.in(players[index].socket_room).emit("time", `player${players[index].player}-${moment().format()}`)
         // console.log('emit')

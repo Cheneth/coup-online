@@ -7,7 +7,8 @@ export default class JoinGame extends Component {
     
         this.state = {
             name: '',
-            roomCode: ''
+            roomCode: '',
+            isInRoom: false
         }
     }
     

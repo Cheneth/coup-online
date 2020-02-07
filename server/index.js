@@ -26,62 +26,34 @@ gameSocket.on('connection', (socket) => {
         "_id" : socket.id,
         "player": '',
         "socket_room": `${socket.id}`,
-<<<<<<< Updated upstream
-    });
-    const index = players.length - 1;
-
-    const updatePlayerList = () => {
-        let updatedPlayers = players.map((x) => {
-            return {
-                name: x.player,
-                socketID: x._id,
-            };
-        }).filter(x => x.name != '');
-        console.log(updatedPlayers);
-        gameSocket.emit('playerJoined', updatedPlayers);
-    }
-    console.log(`player ${players.length} has connected`);
-    socket.join(players[index].socket_room);
-    console.log('socket joined ' + players[index].socket_room);
-    socket.on('setName', (name) => {
-        players[index].player = name;
-        console.log(players[index]);
-        updatePlayerList();
-        socket.in(players[index].socket_room).emit("joinSuccess", players[index]._id);
-    })
-    setInterval(() => {
-        socket.in(players[index].socket_room).emit("time", `player${players[index].player}-${moment().format()}`);
-        // console.log('emit');
-=======
         "isReady": false
     })
     console.log(`player ${players.length} has connected`);
     socket.join(socket.id);
-    console.log('socket joined ' + socket.id)
-    const index = players.length-1
+    console.log('socket joined ' + socket.id);
+    const index = players.length-1;
 
     const updatePlayerList = () => {
         let updatedPlayers = players.map(x => {
             return {name: x.player, socketID: x._id, isReady: x.isReady}
         }).filter(x => x.name != '')
-        console.log(updatedPlayers)
-        gameSocket.emit('playerJoined', updatedPlayers) 
+        console.log(updatedPlayers);
+        gameSocket.emit('playerJoined', updatedPlayers) ;
     }
 
     setInterval(() => {
-        gameSocket.to(socket.id).emit("time", `${players[index].player}-${moment().format()}`)
-        console.log('emit')
->>>>>>> Stashed changes
+        gameSocket.to(socket.id).emit("time", `${players[index].player}-${moment().format()}`);
+        console.log('emit');
     }, 1000);
 
     socket.on('setName', (name) => { //when client joins, it will immediately set its name
         if(!players.map(x => x.player).includes(name)){
-            players[index].player = name
-            console.log(players[index])
-            updatePlayerList()
-            socket.in(players[index].socket_room).emit("joinSuccess", players[index]._id)
+            players[index].player = name;
+            console.log(players[index]);
+            updatePlayerList();
+            socket.in(players[index].socket_room).emit("joinSuccess", players[index]._id);
         } else {
-            socket.in(players[index].socket_room).emit("joinFailed", 'name_taken')
+            socket.in(players[index].socket_room).emit("joinFailed", 'name_taken');
         }  
     })
     socket.on('setReady', (isReady) => { //when client is ready, they will update this

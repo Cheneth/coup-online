@@ -1,6 +1,5 @@
 import React from 'react';
 import logo from './logo.svg';
-import SocketTest from './components/socketTest'
 import CreateGame from './components/CreateGame';
 import './App.css';
 
@@ -11,6 +10,7 @@ import {
   Link
 } from "react-router-dom";
 import JoinGame from './components/JoinGame';
+import Home from './components/Home';
 
 
 function App() {
@@ -27,7 +27,7 @@ function App() {
               <JoinGame></JoinGame>
             </Route>
             <Route path="/">
-              <SocketTest/>
+              <Home></Home>
             </Route>
           </Switch>
         </div>

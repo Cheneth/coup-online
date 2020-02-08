@@ -108,6 +108,11 @@ openSocket = (gameSocket, namespace) => {
             updatePartyList();
         })
     });
+
+    gameSocket.on('startGameSignal', (players) => {
+        gameSocket.emit('startGame');
+        console.log('Game started');
+    })
 }
 
 server.listen(port, function(){

@@ -130,7 +130,7 @@ export default class CreateGame extends Component {
                         }
                         return (
                             <div key={index}>
-                                <p >{item.name} {ready}</p>
+                                <p >{index+1}. {item.name} {ready}</p>
                             </div>)
                         })
                     }

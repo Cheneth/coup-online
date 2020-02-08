@@ -86,6 +86,8 @@ openSocket = (gameSocket, namespace) => {
         socket.on('setReady', (isReady) => { //when client is ready, they will update this
             console.log(`${players[index].player} is ready`);
             players[index].isReady = isReady;
+            updatePartyList();
+            gameSocket.to(players[index].socket_id).emit("readyConfirm");
         })
     
         socket.on('disconnect', () => {

@@ -13,7 +13,11 @@ export default class JoinGame extends Component {
             name: '',
             roomCode: '',
             isInRoom: false,
-            isLoading: false
+            isReady: false,
+            isLoading: false,
+            isError: false,
+            errorMsg: '',
+            socket: null
         }
     }
 
@@ -28,17 +32,24 @@ export default class JoinGame extends Component {
     joinParty = () => {
         const bind = this
         const socket = io(`${baseUrl}/${this.state.roomCode}`);
+        this.setState({ socket });
         console.log("socket created")
         socket.emit('setName', this.state.name);
         
         socket.on("joinSuccess", function() {
             console.log("join successful")
-            bind.setState({ isLoading: false });
+            // bind.setState({ isLoading: false });
+            bind.setState({ isInRoom: true })
         })
 
         socket.on("joinFailed", function(err) {
             console.log("join failed, cause: " + err);
-            bind.setState({ isLoading: false });
+            bind.setState({ 
+                errorMsg: err,
+                isError: true,
+                isLoading: false
+            });
+            socket.disconnect();
         })
 
         socket.on('disconnected', function() {
@@ -51,6 +62,19 @@ export default class JoinGame extends Component {
         if(this.state.name === '') {
             //TODO  handle error
             console.log('Please enter a name');
+            this.setState({ 
+                errorMsg: 'Please enter a name',
+                isError: true 
+            });
+            return
+        }
+        if(this.state.roomCode === '') {
+            //TODO  handle error
+            console.log('Please enter a room code');
+            this.setState({ 
+                errorMsg: 'Please enter a room code',
+                isError: true
+            });
             return
         }
 
@@ -66,17 +90,47 @@ export default class JoinGame extends Component {
                 } else {
                     //TODO  handle error
                     console.log('Invalid Party Code')
-                    bind.setState({ isLoading: false });
+                    bind.setState({ 
+                        isLoading: false,
+                        errorMsg: 'Invalid Party Code',
+                        isError: true
+                    });
                 }
             })
             .catch(function (err) {
                 //TODO  handle error
                 console.log("error in getting exists", err);
-                bind.setState({ isLoading: false });
+                bind.setState({ 
+                    isLoading: false,
+                    errorMsg: 'Server error',
+                    isError: true
+                });
             })
     }
     
+    reportReady = () => {
+        this.state.socket.emit('setReady', true);
+        this.state.socket.on('readyConfirm', () => {
+            this.setState({ isReady: true })
+        })
+    }
+
     render() {
+        let error = null;
+        let joinReady = null;
+        let ready = null;
+        if(this.state.isError) {
+            error = <b>{this.state.errorMsg}</b>
+        }
+        if(this.state.isInRoom) {
+            joinReady = <button onClick={this.reportReady} disabled={this.state.isReady}>Ready</button>
+        } else {
+            joinReady = <button onClick={this.attemptJoinParty} disabled={this.state.isLoading}>Join</button>
+        }
+        if(this.state.isReady) {
+            ready = <b style={{ color: 'green' }}>You are ready!</b>
+        }
+
         return (
             <div>
                 <p>Your Name</p>
@@ -89,7 +143,12 @@ export default class JoinGame extends Component {
                     type="text" value={this.state.roomCode} disabled={this.state.isLoading}
                     onChange={e => this.onCodeChange(e.target.value)}
                 />
-                <button onClick={this.attemptJoinParty}>Join</button>
+                <br></br>
+                {joinReady}
+                <br></br>
+                {ready}
+                <br></br>
+                {error}
             </div>
         )
     }

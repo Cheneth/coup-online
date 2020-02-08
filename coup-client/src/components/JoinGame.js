@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import io from "socket.io-client";
 
 const axios = require('axios');
+const baseUrl = 'http://localhost:8000'
 
 export default class JoinGame extends Component {
 
@@ -25,12 +26,19 @@ export default class JoinGame extends Component {
     }
 
     joinParty = () => {
-        const socket = io(`localhost:8000/${this.state.roomCode}`);
+        const bind = this
+        const socket = io(`${baseUrl}/${this.state.roomCode}`);
         console.log("socket created")
         socket.emit('setName', this.state.name);
         
         socket.on("joinSuccess", function() {
             console.log("join successful")
+            bind.setState({ isLoading: false });
+        })
+
+        socket.on("joinFailed", function(err) {
+            console.log("join failed, cause: " + err);
+            bind.setState({ isLoading: false });
         })
 
         socket.on('disconnected', function() {
@@ -39,9 +47,16 @@ export default class JoinGame extends Component {
     }
 
     attemptJoinParty = () => {
+
+        if(this.state.name === '') {
+            //TODO  handle error
+            console.log('Please enter a name');
+            return
+        }
+
         this.setState({ isLoading: true });
         const bind = this
-        axios.get(`http://localhost:8000/exists/${this.state.roomCode}`)
+        axios.get(`${baseUrl}/exists/${this.state.roomCode}`)
             .then(function (res) {
                 console.log(res)
                 if(res.data.exists) {
@@ -49,11 +64,13 @@ export default class JoinGame extends Component {
                     console.log("joining")
                     bind.joinParty();
                 } else {
+                    //TODO  handle error
                     console.log('Invalid Party Code')
                     bind.setState({ isLoading: false });
                 }
             })
             .catch(function (err) {
+                //TODO  handle error
                 console.log("error in getting exists", err);
                 bind.setState({ isLoading: false });
             })
@@ -72,7 +89,7 @@ export default class JoinGame extends Component {
                     type="text" value={this.state.roomCode} disabled={this.state.isLoading}
                     onChange={e => this.onCodeChange(e.target.value)}
                 />
-                <button onClick={this.attemptJoinParty}></button>
+                <button onClick={this.attemptJoinParty}>Join</button>
             </div>
         )
     }

@@ -10,14 +10,14 @@ export default class CreateGame extends Component {
         super(props)
     
         this.state = {
-            gameSpace: 'oneRoom',
+            roomCode: 'oneRoom',
             players: []
         }
     }
     
     componentDidMount(){
-        const socket = io(`localhost:8000/${this.state.gameSpace}`);
-        socket.on('playerJoined', (players) => {
+        const socket = io(`localhost:8000/${this.state.roomCode}`);
+        socket.on('partyUpdate', (players) => {
             console.log(players)
             this.setState({ players })
         })

@@ -10,6 +10,7 @@ import {
   Route,
   Link
 } from "react-router-dom";
+import JoinGame from './components/JoinGame';
 
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
               <CreateGame></CreateGame>
             </Route>
             <Route path="/join">
+              <JoinGame></JoinGame>
             </Route>
             <Route path="/">
               <SocketTest/>

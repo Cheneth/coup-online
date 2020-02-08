@@ -15,7 +15,7 @@ export default class socketTest extends Component {
       }
 
     componentDidMount(){
-        const socket = io('localhost:8000/oneRoom');
+        const socket = io('localhost:8000/GY6STH');
         console.log('mounted')
         socket.emit('setName', faker.name.findName())
         socket.on("time", data => {

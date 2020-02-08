@@ -24,8 +24,9 @@ app.get('/createNamespace', function (req, res) {
     }
 
     const newSocket = io.of(`/${newNamespace}`);
-    openSocket(newSocket);
+    openSocket(newSocket, `/${newNamespace}`);
     namespaces.push(newNamespace);
+    console.log(newNamespace + " CREATED")
     res.json({namespace: newNamespace});
 })
 
@@ -36,16 +37,16 @@ app.get('/exists/:namespace', function (req, res) { //returns bool
 
 //game namespace: oneRoom
 
-openSocket = (gameSocket) => {
+openSocket = (gameSocket, namespace) => {
 
     let players = []; //includes deleted for index purposes
     let partyMembers = []; //actual members
+    let partyLeader = ''
     gameSocket.on('connection', (socket) => {
         console.log('id: ' + socket.id);
         players.push({
-            "_id" : socket.id,
             "player": '',
-            "socket_room": `${socket.id}`,
+            "socket_id": `${socket.id}`,
             "isReady": false
         })
         console.log(`player ${players.length} has connected`);
@@ -55,7 +56,7 @@ openSocket = (gameSocket) => {
 
         const updatePartyList = () => {
             partyMembers = players.map(x => {
-                return {name: x.player, socketID: x._id, isReady: x.isReady}
+                return {name: x.player, socketID: x.socket_id, isReady: x.isReady}
             }).filter(x => x.name != '')
             console.log(partyMembers);
             gameSocket.emit('partyUpdate', partyMembers) ;
@@ -64,16 +65,22 @@ openSocket = (gameSocket) => {
         socket.on('setName', (name) => { //when client joins, it will immediately set its name
             if(!players.map(x => x.player).includes(name)){
                 if(partyMembers.length >= 7) {
-                    gameSocket.to(players[index].socket_room).emit("joinFailed", 'party_full');
+                    gameSocket.to(players[index].socket_id).emit("joinFailed", 'party_full');
                 } else {
+                    if(partyMembers.length == 0) {
+                        partyLeader = players[index].socket_id;
+                        players[index].isReady = true;
+                        gameSocket.to(players[index].socket_id).emit("leader");
+                        console.log("PARTY LEADER IS: " + partyLeader);
+                    }
                     players[index].player = name;
                     console.log(players[index]);
                     updatePartyList();
-                    gameSocket.to(players[index].socket_room).emit("joinSuccess", players[index]._id);
+                    gameSocket.to(players[index].socket_id).emit("joinSuccess", players[index].socket_id);
                 }
                 
             } else {
-                gameSocket.to(players[index].socket_room).emit("joinFailed", 'name_taken');
+                gameSocket.to(players[index].socket_id).emit("joinFailed", 'name_taken');
             }  
         })
         socket.on('setReady', (isReady) => { //when client is ready, they will update this
@@ -84,8 +91,16 @@ openSocket = (gameSocket) => {
         socket.on('disconnect', () => {
             console.log('disconnected: ' + socket.id);
             players.map((x,index) => {
-                if(x._id == socket.id) {
+                if(x.socket_id == socket.id) {
                     players[index].player ='';
+                    if(socket.id === partyLeader) {
+                        console.log('Leader has disconnected');
+                        gameSocket.emit('leaderDisconnect', 'leader_disconnected');
+                        socket.removeAllListeners();
+                        delete io.nsps[namespace];
+                        players = [];
+                        partyMembers = []
+                    }
                 }
             })
             updatePartyList();

@@ -3,8 +3,11 @@ const moment = require('moment');
 
 // Server/express setup
 const app = express();
+const cors = require('cors');
+app.use(cors());
 const server = require('http').createServer(app);
 const io = require('socket.io')(server);
+
 
 // require("./routes")(app);
 const generateNamespace = require('./utilities/utilities.js')
@@ -35,10 +38,9 @@ app.get('/exists/:namespace', function (req, res) { //returns bool
 
 openSocket = (gameSocket) => {
 
-    let players = [];
-
+    let players = []; //includes deleted for index purposes
+    let partyMembers = []; //actual members
     gameSocket.on('connection', (socket) => {
-
         console.log('id: ' + socket.id);
         players.push({
             "_id" : socket.id,
@@ -51,22 +53,27 @@ openSocket = (gameSocket) => {
         console.log('socket joined ' + socket.id);
         const index = players.length-1;
 
-        const updatePlayerList = () => {
-            let updatedPlayers = players.map(x => {
+        const updatePartyList = () => {
+            partyMembers = players.map(x => {
                 return {name: x.player, socketID: x._id, isReady: x.isReady}
             }).filter(x => x.name != '')
-            console.log(updatedPlayers);
-            gameSocket.emit('playerJoined', updatedPlayers) ;
+            console.log(partyMembers);
+            gameSocket.emit('partyUpdate', partyMembers) ;
         }
 
         socket.on('setName', (name) => { //when client joins, it will immediately set its name
             if(!players.map(x => x.player).includes(name)){
-                players[index].player = name;
-                console.log(players[index]);
-                updatePlayerList();
-                socket.in(players[index].socket_room).emit("joinSuccess", players[index]._id);
+                if(partyMembers.length >= 7) {
+                    gameSocket.to(players[index].socket_room).emit("joinFailed", 'party_full');
+                } else {
+                    players[index].player = name;
+                    console.log(players[index]);
+                    updatePartyList();
+                    gameSocket.to(players[index].socket_room).emit("joinSuccess", players[index]._id);
+                }
+                
             } else {
-                socket.in(players[index].socket_room).emit("joinFailed", 'name_taken');
+                gameSocket.to(players[index].socket_room).emit("joinFailed", 'name_taken');
             }  
         })
         socket.on('setReady', (isReady) => { //when client is ready, they will update this
@@ -81,7 +88,7 @@ openSocket = (gameSocket) => {
                     players[index].player ='';
                 }
             })
-            updatePlayerList();
+            updatePartyList();
         })
     });
 }

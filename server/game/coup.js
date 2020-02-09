@@ -2,43 +2,52 @@ const gameUtils = require('./utils')
 
 class CoupGame{
 
-    constructor(players, socket, gameSocket) {
+    constructor(players, gameSocket) {
+        this.nameSocketMap = gameUtils.buildNameSocketMap(players);
         this.players = gameUtils.buildPlayers(players);
-        this.socket = socket; //in
-        this.gameSocket = gameSocket; //out
+        this.gameSocket = gameSocket;
         this.currentPlayer = 0;
         this.deck = gameUtils.buildDeck();
+        this.winner = '';
     }
 
-    buildDeck() {
-        let deck = []
-        for(let i = 0; i < 3; i++) {
-            deck.push("duke");
+    resetGame(startingPlayer = 0) {
+        this.currentPlayer = startingPlayer;
+        for(let i = 0; i < this.players.length; i++) {
+            this.players[i].money = 2;
+            this.players[i].influences = [this.deck.pop(), this.deck.pop()];
+            this.players[i].isDead = false;
         }
-        for(let i = 0; i < 3; i++) {
-            deck.push("assassin");
-        }
-        for(let i = 0; i < 3; i++) {
-            deck.push("captain");
-        }
-        for(let i = 0; i < 3; i++) {
-            deck.push("ambassador");
-        }
-        for(let i = 0; i < 3; i++) {
-            deck.push("countessa");
-        }
-        for(let i = 0; i < deck.length; i++) {
-            const one = Math.floor(Math.random()*(deck.length-1));
-            const two = Math.floor(Math.random()*(deck.length-1));
-            let temp = deck[one];
-            deck[one] = deck[two];
-            deck[two] = temp;
-        }
-        return deck;
+        console.log(this.deck, this.players);
+    }
+
+    listen() {
+        this.players.map(x => {
+            const socket = this.gameSocket.sockets[x.socketID];
+            socket.on('g-actionDecision', (action) => {
+                console.log('player: ', action.name)
+                console.log('action: ', action.action)
+            })
+        })
+    }
+
+
+
+    playTurn() {
+        this.gameSocket.to(this.players[this.currentPlayer].socketID).emit("g-chooseAction");
+    }
+
+    onChooseAction(action) {
+        console.log('action', action)
     }
 
     start() {
+        this.resetGame();
+        this.listen();
+        this.playTurn()
+        
         console.log('Game has started');
+        //deal cards to each player
     }
     
 }

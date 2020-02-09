@@ -13,23 +13,44 @@ buildDeck = () => {
         deck.push("ambassador");
     }
     for(let i = 0; i < 3; i++) {
-        deck.push("countessa");
+        deck.push("contessa");
     }
-    for(let i = 0; i < deck.length; i++) {
+    for(let i = 0; i < deck.length*2; i++) {
         const one = Math.floor(Math.random()*(deck.length-1));
         const two = Math.floor(Math.random()*(deck.length-1));
         let temp = deck[one];
         deck[one] = deck[two];
         deck[two] = temp;
     }
-    console.log(deck)
-    return deck
+    console.log(deck);
+    return deck;
+}
+
+shuffleDeck = (deck) => {
+    for(let i = 0; i < deck.length*2; i++) {
+        const one = Math.floor(Math.random()*(deck.length-1));
+        const two = Math.floor(Math.random()*(deck.length-1));
+        let temp = deck[one];
+        deck[one] = deck[two];
+        deck[two] = temp;
+    }
+    return deck;
+}
+
+buildNameSocketMap = (players) => {
+    return players.map((x) => {
+        let keyVal = {};
+        keyVal[x.name] = x.socketID;
+        return keyVal;
+    })
 }
 
 buildPlayers = (players) => {
     players.forEach(x => {
-        x.money = 0;
+        x.money = 2;
         x.influences = [];
+        x.isDead = false;
+        delete x.isReady;
     });
     console.log(players);
     return players;
@@ -37,5 +58,7 @@ buildPlayers = (players) => {
 
 module.exports = {
     buildDeck: buildDeck,
-    buildPlayers: buildPlayers
+    buildPlayers: buildPlayers,
+    shuffleDeck: shuffleDeck,
+    buildNameSocketMap: buildNameSocketMap
 }

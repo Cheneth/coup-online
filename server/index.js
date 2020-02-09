@@ -8,31 +8,41 @@ app.use(cors());
 const server = require('http').createServer(app);
 const io = require('socket.io')(server);
 const CoupGame = require('./game/coup');
-
+// const game = new CoupGame([ { name: 'Ethan',
+// socketID: '/DPRI33#OJIB1ERYp-M_K-m5AAAD',
+// isReady: true },
+// { name: 'Joe',
+// socketID: '/DPRI33#FbwKBDCgYjPrTgyfAAAE',
+// isReady: true },
+// { name: 'MAMA',
+// socketID: '/DPRI33#NVzRGTKOfFh7IDqHAAAF',
+// isReady: true } ], '', '')
+// game.start();
 // require("./routes")(app);
 const generateNamespace = require('./utilities/utilities.js')
 
 // Constants
 const port = 8000;
 
-let namespaces = []; //AKA party rooms
+let namespaces = {}; //AKA party rooms
+
 
 app.get('/createNamespace', function (req, res) { 
     let newNamespace = '';
-    while(newNamespace === '' || namespaces.includes(newNamespace)) {
+    while(newNamespace === '' || (newNamespace in namespaces)) {
         newNamespace = generateNamespace(); //default length 6
     }
 
     const newSocket = io.of(`/${newNamespace}`);
     openSocket(newSocket, `/${newNamespace}`);
-    namespaces.push(newNamespace);
+    namespaces[newNamespace] = null;
     console.log(newNamespace + " CREATED")
     res.json({namespace: newNamespace});
 })
 
 app.get('/exists/:namespace', function (req, res) { //returns bool
     const namespace = req.params.namespace;
-    res.json({exists: namespaces.includes(namespace)});
+    res.json({exists: (namespace in namespaces)});
 })
 
 //game namespace: oneRoom
@@ -61,6 +71,10 @@ openSocket = (gameSocket, namespace) => {
             console.log(partyMembers);
             gameSocket.emit('partyUpdate', partyMembers) ;
         }
+
+        // socket.on('g-actionDecision', (action) => {
+        //     namespaces[namespace].onChooseAction(action);
+        // })
 
         socket.on('setName', (name) => { //when client joins, it will immediately set its name
             if(!players.map(x => x.player).includes(name)){
@@ -92,10 +106,11 @@ openSocket = (gameSocket, namespace) => {
 
         socket.on('startGameSignal', (players) => {
             gameSocket.emit('startGame');
+            // namespaces[namespace] = new CoupGame(players, gameSocket);
+            // namespaces[namespace].start();
+            startGame(players, gameSocket, socket);
             console.log('Game started');
-            console.log(players)
-            const game = new CoupGame();
-            game.start();
+            console.log(players);
         })
     
         socket.on('disconnect', () => {
@@ -115,7 +130,22 @@ openSocket = (gameSocket, namespace) => {
             })
             updatePartyList();
         })
+
+        //this section is related to the game -->
+
     });
+}
+
+startGame = (players, gameSocket, socket) => {
+    
+    const game = new CoupGame(players, gameSocket);
+    // players.map(x => {
+    //     const socket = gameSocket.sockets[x.socketID];
+    //     socket.on('g-actionDecision', (action) => {
+    //         console.log('action', action)
+    //     })
+    // })
+    game.start();
 }
 
 server.listen(port, function(){

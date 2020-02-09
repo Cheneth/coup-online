@@ -65,6 +65,8 @@ class CoupGame{
             },
         }
         this.isChallengeBlockOpen = false;
+        this.isRevealOpen = false;
+        this.isChooseInfluenceOpen = false;
         this.votes = 0;
         this.aliveCount = 0;
     }
@@ -72,6 +74,8 @@ class CoupGame{
     resetGame(startingPlayer = 0) {
         this.currentPlayer = startingPlayer;
         this.isChallengeBlockOpen = false;
+        this.isRevealOpen = false;
+        this.isChooseInfluenceOpen = false;
         this.aliveCount = this.players.length;
         this.votes = 0;
         for(let i = 0; i < this.players.length; i++) {
@@ -86,9 +90,9 @@ class CoupGame{
         this.players.map(x => {
             const socket = this.gameSocket.sockets[x.socketID];
             socket.on('g-actionDecision', (res) => {
-                // res.action.target, res.action.action res.name, res.target
+                // res.action.target, res.action.action, res.action.source
                 if(this.actions[res.action.action].isChallengeable) {
-                    openChallenge(res.action, res.name, (this.actions[res.action].blockableBy.length > 0))
+                    openChallenge(res.action, (this.actions[res.action].blockableBy.length > 0))
                 } else if(res.action.action == 'foreign_aid') {
                     this.isChallengeBlockOpen = true;
                     this.gameSocket.emit("g-openBlock");
@@ -97,15 +101,16 @@ class CoupGame{
                 }
             })
             socket.on('g-challengeDecision', (res) => {
-                // res.action.action, res.action.target, res.challengee, res.challenger, res.isChallenging
+                // res.action.action, res.action.target, res.action.source, res.challengee, res.challenger, res.isChallenging
                 if(this.isChallengeBlockOpen) {
                     if(res.isChallenging) {
                         closeChallenge();
                         //TODO reveal
+                        reveal();
                     } else if(votes+1 == this.aliveCount-1) {
                         //then it is a pass
                         closeChallenge();
-                        applyAction(res.action, res.challengee)
+                        applyAction(res.action);
                     } else {
                         this.votes += 1;
                     }
@@ -117,6 +122,7 @@ class CoupGame{
                     if(res.isChallenging) {
                         closeChallenge();
                         //TODO reveal
+                        reveal();
                     } else if(votes+1 == this.aliveCount-1) {
                         //then it is a pass
                         closeChallenge();
@@ -127,7 +133,7 @@ class CoupGame{
                 }
             });
             socket.on('g-blockDecision', (res) => {
-                // res.prevAction.action, res.prevAction.target, res.counterAction, res.blockee, res.blocker, res.isBlocking
+                // res.prevAction.action, res.prevAction.target, res.prevAction.source, res.counterAction, res.blockee, res.blocker, res.isBlocking
                 if(this.isChallengeBlockOpen) {
                     if(res.isBlocking) {
                         closeChallenge();
@@ -141,7 +147,85 @@ class CoupGame{
                     }
                 }
             });
+            socket.on('g-revealDecision', (res) => {
+                // res.revealedCard, prevaction, counterAction, challengee, challenger, isBlock
+                if(this.isRevealOpen) {
+                    if(res.isBlock) { //block challenge
+                        if(res.revealedCard == res.counterAction.claim) { //challenge failed
+                            this.isChooseInfluenceOpen = true;
+                            this.gameSocket.to(this.nameSocketMap[res.challenger]).emit('g-chooseInfluence');
+                            nextTurn();
+                        } else { //challenge succeeded
+                            for(let i = 0; i < this.players[res.challengee].influences.length; i++) {
+                                if(this.players[res.challengee].influences[i] == res.revealedCard) {
+                                    this.deck.push(this.players[res.challengee].influences[i]);
+                                    this.deck = gameUtils.shuffleDeck(deck);
+                                    this.players[res.challengee].influences.splice(i,1);
+                                    break;
+                                }
+                            }
+                            applyAction(res.action);
+                        }
+                    } else { //normal challenge
+                        if(res.revealedCard == this.actions[res.action].influence) { // challenge failed
+                            this.isChooseInfluenceOpen = true;
+                            this.gameSocket.to(this.nameSocketMap[res.challenger]).emit('g-chooseInfluence');
+                            applyAction(res.action);
+                        } else { //challenge succeeded
+                            for(let i = 0; i < this.players[res.challengee].influences.length; i++) {
+                                if(this.players[res.challengee].influences[i] == res.revealedCard) {
+                                    this.deck.push(this.players[res.challengee].influences[i]);
+                                    this.deck = gameUtils.shuffleDeck(deck);
+                                    this.players[res.challengee].influences.splice(i,1);
+                                    break;
+                                }
+                            }
+                            updateInfluences();
+                            this.isRevealOpen = false;
+                            nextTurn();
+                        }
+                    }
+                }
+            });
+            socket.on('g-chooseInfluenceDecision', (res) => {
+                // res.influence, res.playerName
+                if(this.isChooseInfluenceOpen) {
+                    for(let i = 0; i < this.players[res.playerName].influences.length; i++) {
+                        if(this.players[res.playerName].influences[i] == res.influence) {
+                            this.deck.push(this.players[res.playerName].influences[i]);
+                            this.deck = gameUtils.shuffleDeck(deck);
+                            this.players[challengee].influences.splice(i,1);
+                            break;
+                        }
+                    }
+                    updateInfluences();
+                    this.isChooseInfluenceOpen = false;
+                    nextTurn();
+                }
+            })
         })
+    }
+
+    updateInfluences() {
+
+    }
+
+    updateMoney() {
+
+    }
+
+    reveal(action, counterAction, challengee, challenger, isBlock) {
+        //if isBlock, action should contain the prev action
+        //if isBlock is false, counterAction is null and action is the action being challenged
+        const res = {
+            action: action,
+            counterAction: counterAction,
+            challengee: challengee,
+            challenger: challenger,
+            isBlock: isBlock
+        }
+        this.isRevealOpen = true;
+        this.gameSocket.to(this.nameSocketMap[challengee]).emit("g-chooseReveal", res);
     }
 
     closeChallenge() {
@@ -149,9 +233,10 @@ class CoupGame{
         this.votes = 0;
         this.gameSocket.emit("g-closeChallenge");
         this.gameSocket.emit("g-closeBlock");
+        this.gameSocket.emit("g-closeBlockChallenge");
     }
 
-    openChallenge(action, name, target, isBlockable) {
+    openChallenge(action, isBlockable) {
         this.isChallengeBlockOpen = true;
         if(isBlockable) {
             let targetIndex = 0;
@@ -164,23 +249,21 @@ class CoupGame{
             this.gameSocket.to(this.players[targetIndex].socketID).emit("g-openBlock");
         }
         this.gameSocket.emit("g-openChallenge", {
-            action: action,
-            name: name
+            action: action
         });
     }
 
     openBlockChallenge(counterAction, blockee, prevAction) {
         //blockClaim is the character that the blockee claims to be blocking with
         this.isChallengeBlockOpen = true;
-        this.gameSocket.emit("g-openChallengeBlock", {
+        this.gameSocket.emit("g-openBlockChallenge", {
             counterAction: counterAction,
-            name: blockee,
             prevAction: prevAction
         });
 
     }
 
-    applyAction(action) {
+    applyAction(action, actioner) {
 
     }
 

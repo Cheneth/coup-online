@@ -45,8 +45,17 @@ buildNameSocketMap = (players) => {
     })
 }
 
+buildNameIndexMap = (players) => {
+    return players.map((x, index) => {
+        let keyVal = {};
+        keyVal[x.name] = index;
+        return keyVal;
+    })
+}
+
 buildPlayers = (players) => {
     players.forEach(x => {
+        delete x.chosen;
         x.money = 2;
         x.influences = [];
         x.isDead = false;
@@ -56,9 +65,18 @@ buildPlayers = (players) => {
     return players;
 }
 
+exportPlayers = (players) => {
+    players.forEach(x => {
+        delete x.socketID;
+    });
+    return players;
+}
+
 module.exports = {
     buildDeck: buildDeck,
     buildPlayers: buildPlayers,
+    exportPlayers: exportPlayers,
     shuffleDeck: shuffleDeck,
-    buildNameSocketMap: buildNameSocketMap
+    buildNameSocketMap: buildNameSocketMap,
+    buildNameIndexMap: buildNameIndexMap
 }

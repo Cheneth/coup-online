@@ -4,6 +4,7 @@ class CoupGame{
 
     constructor(players, gameSocket) {
         this.nameSocketMap = gameUtils.buildNameSocketMap(players);
+        this.nameIndexMap = gameUtils.buildNameIndexMap(players);
         this.players = gameUtils.buildPlayers(players);
         this.gameSocket = gameSocket;
         this.currentPlayer = 0;
@@ -64,9 +65,10 @@ class CoupGame{
                 influences: ["contessa"]
             },
         }
-        this.isChallengeBlockOpen = false;
-        this.isRevealOpen = false;
-        this.isChooseInfluenceOpen = false;
+        this.isChallengeBlockOpen = false; // if listening for challeng or block votes
+        this.isRevealOpen = false; // if listening for what influence player will reveal
+        this.isChooseInfluenceOpen = false; // if listening for what influence to lose
+        this.isExchangeOpen = false; // if listening for result of ambassador exchange;
         this.votes = 0;
         this.aliveCount = 0;
     }
@@ -76,6 +78,7 @@ class CoupGame{
         this.isChallengeBlockOpen = false;
         this.isRevealOpen = false;
         this.isChooseInfluenceOpen = false;
+        this.isExchangeOpen = false;
         this.aliveCount = this.players.length;
         this.votes = 0;
         for(let i = 0; i < this.players.length; i++) {
@@ -87,6 +90,17 @@ class CoupGame{
     }
 
     listen() {
+        // action = {
+        //     action: "",
+        //     target: "",
+        //     source: ""
+        // }
+        // counterAction = {
+        //     counterAction: "",
+        //     target: "",
+        //     source: ""
+        // }
+
         this.players.map(x => {
             const socket = this.gameSocket.sockets[x.socketID];
             socket.on('g-actionDecision', (res) => {
@@ -141,7 +155,7 @@ class CoupGame{
                     } else if(votes+1 == this.aliveCount-1) {
                         //then it is a pass
                         closeChallenge();
-                        applyAction(res.action, res.blockee);
+                        applyAction(res.action);
                     } else {
                         this.votes += 1;
                     }
@@ -149,6 +163,7 @@ class CoupGame{
             });
             socket.on('g-revealDecision', (res) => {
                 // res.revealedCard, prevaction, counterAction, challengee, challenger, isBlock
+                const challengeeIndex = this.nameIndexMap[res.challengee];
                 if(this.isRevealOpen) {
                     if(res.isBlock) { //block challenge
                         if(res.revealedCard == res.counterAction.claim) { //challenge failed
@@ -156,11 +171,11 @@ class CoupGame{
                             this.gameSocket.to(this.nameSocketMap[res.challenger]).emit('g-chooseInfluence');
                             nextTurn();
                         } else { //challenge succeeded
-                            for(let i = 0; i < this.players[res.challengee].influences.length; i++) {
-                                if(this.players[res.challengee].influences[i] == res.revealedCard) {
-                                    this.deck.push(this.players[res.challengee].influences[i]);
+                            for(let i = 0; i < this.players[challengeeIndex].influences.length; i++) {
+                                if(this.players[challengeeIndex].influences[i] == res.revealedCard) {
+                                    this.deck.push(this.players[challengeeIndex].influences[i]);
                                     this.deck = gameUtils.shuffleDeck(deck);
-                                    this.players[res.challengee].influences.splice(i,1);
+                                    this.players[challengeeIndex].influences.splice(i,1);
                                     break;
                                 }
                             }
@@ -172,15 +187,14 @@ class CoupGame{
                             this.gameSocket.to(this.nameSocketMap[res.challenger]).emit('g-chooseInfluence');
                             applyAction(res.action);
                         } else { //challenge succeeded
-                            for(let i = 0; i < this.players[res.challengee].influences.length; i++) {
-                                if(this.players[res.challengee].influences[i] == res.revealedCard) {
-                                    this.deck.push(this.players[res.challengee].influences[i]);
+                            for(let i = 0; i < this.players[challengeeIndex].influences.length; i++) {
+                                if(this.players[challengeeIndex].influences[i] == res.revealedCard) {
+                                    this.deck.push(this.players[challengeeIndex].influences[i]);
                                     this.deck = gameUtils.shuffleDeck(deck);
-                                    this.players[res.challengee].influences.splice(i,1);
+                                    this.players[challengeeIndex].influences.splice(i,1);
                                     break;
                                 }
                             }
-                            updateInfluences();
                             this.isRevealOpen = false;
                             nextTurn();
                         }
@@ -189,16 +203,28 @@ class CoupGame{
             });
             socket.on('g-chooseInfluenceDecision', (res) => {
                 // res.influence, res.playerName
+                const playerIndex = this.nameIndexMap[res.playerName];
                 if(this.isChooseInfluenceOpen) {
-                    for(let i = 0; i < this.players[res.playerName].influences.length; i++) {
-                        if(this.players[res.playerName].influences[i] == res.influence) {
-                            this.deck.push(this.players[res.playerName].influences[i]);
+                    for(let i = 0; i < this.players[playerIndex].influences.length; i++) {
+                        if(this.players[playerIndex].influences[i] == res.influence) {
+                            this.deck.push(this.players[playerIndex].influences[i]);
                             this.deck = gameUtils.shuffleDeck(deck);
-                            this.players[challengee].influences.splice(i,1);
+                            this.players[playerIndex].influences.splice(i,1);
                             break;
                         }
                     }
-                    updateInfluences();
+                    this.isChooseInfluenceOpen = false;
+                    nextTurn();
+                }
+            })
+            socket.on('g-chooseExchangeDecision', (res) => {
+                // res.playerName, res.kept, res.putBack = ["influence","influence"]
+                const playerIndex = this.nameIndexMap[res.playerName];
+                if(this.isExchangeOpen) {
+                    this.players[playerIndex].influences = res.kept;
+                    this.deck.push(res.putBack[0]);
+                    this.deck.push(res.putBack[1]);
+                    this.deck = gameUtils.shuffleDeck(this.deck);
                     this.isChooseInfluenceOpen = false;
                     nextTurn();
                 }
@@ -206,12 +232,8 @@ class CoupGame{
         })
     }
 
-    updateInfluences() {
-
-    }
-
-    updateMoney() {
-
+    updatePlayers() {// when players die
+        gameSocket.emit('updatePlayers', gameUtils.exportPlayers(this.players));
     }
 
     reveal(action, counterAction, challengee, challenger, isBlock) {
@@ -260,19 +282,113 @@ class CoupGame{
             counterAction: counterAction,
             prevAction: prevAction
         });
-
     }
 
-    applyAction(action, actioner) {
+    applyAction(action) {
+        const execute = this.actions[action.action];
+        const target = action.target;
+        const source = action.source;
+        if(execute == 'income') {
+            for(let i = 0; i < this.players.length; i++) {
+                if(this.players[i].name == source) {
+                    this.players[i].money+=1;
+                    break;
+                }
+            }
+            nextTurn();
+        }else if(execute == 'foreign_aid') {
+            for(let i = 0; i < this.players.length; i++) {
+                if(this.players[i].name == source) {
+                    this.players[i].money+=2;
+                    break;
+                }
+            }
+            nextTurn();
+        }else if(execute == 'coup') {
+            for(let i = 0; i < this.players.length; i++) {
+                if(this.players[i].name == target) {
+                    this.isChooseInfluenceOpen = true;
+                    this.gameSocket.to(this.nameSocketMap[target]).emit('g-chooseInfluence');
+                    break;
+                }
+            }
+            // no nextTurn() because it is called in "on chooseInfleunceDecision"
+        }else if(execute == 'tax') {
+            for(let i = 0; i < this.players.length; i++) {
+                if(this.players[i].name == source) {
+                    this.players[i].money+=3;
+                    break;
+                }
+            }
+            nextTurn();
+        }else if(execute == 'assassinate') {
+            for(let i = 0; i < this.players.length; i++) {
+                if(this.players[i].name == target) {
+                    this.isChooseInfluenceOpen = true;
+                    this.gameSocket.to(this.nameSocketMap[target]).emit('g-chooseInfluence');
+                    break;
+                }
+            }
+            // no nextTurn() because it is called in "on chooseInfleunceDecision"
+        }else if(execute == 'exchange') {
+            const drawTwo = [this.deck.pop(), this.deck.pop()]
+            this.gameSocket.to(this.nameSocketMap[source]).emit('g-openExchange', drawTwo);
+             // no nextTurn() because it is called in "on chooseExchangeDecision"
+        }else if(execute == 'steal') {
+            let stolen = 0;
+            for(let i = 0; i < this.players.length; i++) {
+                if(this.players[i].name == target) {
+                    if(this.players[i].money >= 2) {
+                        this.players[i].money-=2;
+                        stolen = 2;
+                    }else if(this.players[i].money == 1) {
+                        this.players[i].money-=1;
+                        stolen = 1;
+                    }else{//no money stolen
 
+                    }
+                    break;
+                }
+            }
+            for(let i = 0; i < this.players.length; i++) {
+                if(this.players[i].name == source) {
+                    this.players[i].money+= stolen;
+                    break;
+                }
+            }
+            nextTurn();
+        }else {
+            console.log('ERROR ACTION NOT FOUND');
+        }
+        
     }
 
     nextTurn() {
-        do {
-            this.currentPlayer+=1;
-            this.currentPlayer%=this.players.length;
-        } while(this.players[this.currentPlayer].isDead == true);
-        playTurn();
+        this.players.forEach(x => {
+            if(x.influences.length == 0) {// player is dead
+                aliveCount-=1;
+                x.isDead = true;
+                x.money = 0;
+            }
+        });
+        if(aliveCount == 1) {
+            const winner
+            for(let i = 0; i < players.length; i++) {
+                if(players[i].influences.length > 0) {
+                    winner = players[i].name; 
+                }
+            }
+            gameSocket.emit('g-gameOver', winner);
+            //GAME END
+        } else {
+            updatePlayers();
+            do {
+                this.currentPlayer+=1;
+                this.currentPlayer%=this.players.length;
+            } while(this.players[this.currentPlayer].isDead == true);
+            playTurn();
+        }
+        
     }
 
     playTurn() {

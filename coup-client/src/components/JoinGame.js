@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import io from "socket.io-client";
+import Coup from './game/Coup';
 
 const axios = require('axios');
 const baseUrl = 'http://localhost:8000'
@@ -16,6 +17,7 @@ export default class JoinGame extends Component {
             isReady: false,
             isLoading: false,
             isError: false,
+            isGameStarted: false,
             errorMsg: '',
             socket: null
         }
@@ -50,6 +52,10 @@ export default class JoinGame extends Component {
                 isLoading: false
             });
             socket.disconnect();
+        })
+
+        socket.on('startGame', () => {
+            this.setState({ isGameStarted: true});
         })
 
         socket.on('disconnected', function() {
@@ -116,6 +122,9 @@ export default class JoinGame extends Component {
     }
 
     render() {
+        if(this.state.isGameStarted) {
+            return (<Coup name={this.state.name} socket={this.state.socket}></Coup>);
+        }
         let error = null;
         let joinReady = null;
         let ready = null;

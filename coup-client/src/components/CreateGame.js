@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import io from "socket.io-client";
 import { ReactSortable } from "react-sortablejs";
+import Coup from './game/Coup';
 
 const axios = require('axios');
 const baseUrl = 'http://localhost:8000'
@@ -17,6 +18,7 @@ export default class CreateGame extends Component {
             isLoading: false,
             players: [],
             isError: false,
+            isGameStarted: false,
             errorMsg: '',
             canStart: false,
             socket: null
@@ -92,7 +94,18 @@ export default class CreateGame extends Component {
             })
     }
 
+    startGame = () => {
+        this.state.socket.emit('startGameSignal', this.state.players)
+
+        this.state.socket.on('startGame', () => {
+            this.setState({ isGameStarted: true});
+        })
+    }
+
     render() {
+        if(this.state.isGameStarted) {
+            return (<Coup name={this.state.name} socket={this.state.socket}></Coup>)
+        }
         let error = null;
         let roomCode = null;
         let startGame = null
@@ -105,7 +118,7 @@ export default class CreateGame extends Component {
                 </>
         }
         if(this.state.canStart) {
-            startGame = <button >Start Game</button>
+            startGame = <button onClick={this.startGame}>Start Game</button>
         }
         return (
             <div>

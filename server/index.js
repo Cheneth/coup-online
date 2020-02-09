@@ -106,9 +106,7 @@ openSocket = (gameSocket, namespace) => {
 
         socket.on('startGameSignal', (players) => {
             gameSocket.emit('startGame');
-            // namespaces[namespace] = new CoupGame(players, gameSocket);
-            // namespaces[namespace].start();
-            startGame(players, gameSocket, socket);
+            startGame(players, gameSocket);
             console.log('Game started');
             console.log(players);
         })
@@ -136,15 +134,9 @@ openSocket = (gameSocket, namespace) => {
     });
 }
 
-startGame = (players, gameSocket, socket) => {
+startGame = (players, gameSocket) => {
     
     const game = new CoupGame(players, gameSocket);
-    // players.map(x => {
-    //     const socket = gameSocket.sockets[x.socketID];
-    //     socket.on('g-actionDecision', (action) => {
-    //         console.log('action', action)
-    //     })
-    // })
     game.start();
 }
 

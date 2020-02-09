@@ -225,7 +225,7 @@ class CoupGame{
                     this.deck.push(res.putBack[0]);
                     this.deck.push(res.putBack[1]);
                     this.deck = gameUtils.shuffleDeck(this.deck);
-                    this.isChooseInfluenceOpen = false;
+                    this.isExchangeOpen = false;
                     nextTurn();
                 }
             })

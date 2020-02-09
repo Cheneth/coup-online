@@ -7,7 +7,7 @@ const cors = require('cors');
 app.use(cors());
 const server = require('http').createServer(app);
 const io = require('socket.io')(server);
-
+const CoupGame = require('./game/coup');
 
 // require("./routes")(app);
 const generateNamespace = require('./utilities/utilities.js')
@@ -89,6 +89,14 @@ openSocket = (gameSocket, namespace) => {
             updatePartyList();
             gameSocket.to(players[index].socket_id).emit("readyConfirm");
         })
+
+        socket.on('startGameSignal', (players) => {
+            gameSocket.emit('startGame');
+            console.log('Game started');
+            console.log(players)
+            const game = new CoupGame();
+            game.start();
+        })
     
         socket.on('disconnect', () => {
             console.log('disconnected: ' + socket.id);
@@ -108,11 +116,6 @@ openSocket = (gameSocket, namespace) => {
             updatePartyList();
         })
     });
-
-    gameSocket.on('startGameSignal', (players) => {
-        gameSocket.emit('startGame');
-        console.log('Game started');
-    })
 }
 
 server.listen(port, function(){

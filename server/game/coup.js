@@ -233,7 +233,7 @@ class CoupGame{
     }
 
     updatePlayers() {// when players die
-        gameSocket.emit('updatePlayers', gameUtils.exportPlayers(this.players));
+        gameSocket.emit('g-updatePlayers', gameUtils.exportPlayers(this.players));
     }
 
     reveal(action, counterAction, challengee, challenger, isBlock) {

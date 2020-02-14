@@ -6,8 +6,29 @@ export default class Coup extends Component {
         super(props)
     
         this.state = {
-             action: ''
+             action: '',
+             players: [],
+             currentPlayer: '',
+             controlOptions: []
+             
         }
+    }
+
+    componentDidMount() {
+        const bind = this
+
+        this.props.socket.on('g-updatePlayers', (players) => {
+            bind.setState({ players });
+        });
+        this.props.socket.on('g-updateCurrentPlayer', (currentPlayer) => {
+            bind.setState({ currentPlayer });
+        });
+
+        this.props.socket.on('g-chooseAction', () => {
+            bind.setState(prevState => ({
+                controlOptions: [...prevState.controlOptions, 'actionDecision']
+            }))
+        });
     }
     
     actionDecision = () => {

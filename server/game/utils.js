@@ -38,19 +38,19 @@ shuffleDeck = (deck) => {
 }
 
 buildNameSocketMap = (players) => {
-    return players.map((x) => {
-        let keyVal = {};
-        keyVal[x.name] = x.socketID;
-        return keyVal;
+    let map = {}
+    players.map((x) => {
+        map[x.name] = x.socketID;
     })
+    return map
 }
 
 buildNameIndexMap = (players) => {
-    return players.map((x, index) => {
-        let keyVal = {};
-        keyVal[x.name] = index;
-        return keyVal;
+    let map = {}
+    players.map((x, index) => {
+        map[x.name] = index;
     })
+    return map
 }
 
 buildPlayers = (players) => {

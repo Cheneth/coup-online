@@ -107,8 +107,6 @@ openSocket = (gameSocket, namespace) => {
         socket.on('startGameSignal', (players) => {
             gameSocket.emit('startGame');
             startGame(players, gameSocket);
-            console.log('Game started');
-            console.log(players);
         })
     
         socket.on('disconnect', () => {

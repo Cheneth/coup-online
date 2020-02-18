@@ -56,7 +56,7 @@ export default class CreateGame extends Component {
         socket.on('partyUpdate', (players) => {
             console.log(players)
             this.setState({ players })
-            if(players.length >= 3 && players.map(x => x.isReady).filter(x => x === true).length === players.length) {
+            if(players.length >= 2 && players.map(x => x.isReady).filter(x => x === true).length === players.length) { //TODO CHANGE 2 BACK TO 3
                 this.setState({ canStart: true })
             } else {
                 this.setState({ canStart: false })

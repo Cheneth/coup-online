@@ -135,14 +135,14 @@ class CoupGame{
                     }
                 }
             });
-            socket.on('g-challengeBlockDecision', (res) => {
+            socket.on('g-blockChallengeDecision', (res) => {
                 console.log(137, res)
                 // res.counterAction, res.prevAction, res.challengee, res.challenger, res.isChallenging
                 if(bind.isChallengeBlockOpen) {
                     if(res.isChallenging) {
                         bind.closeChallenge();
                         //TODO reveal
-                        bind.reveal();
+                        bind.reveal(res.prevAction, res.counterAction, res.challengee, res.challenger, true);
                     } else if(bind.votes+1 == bind.aliveCount-1) {
                         //then it is a pass
                         bind.closeChallenge();

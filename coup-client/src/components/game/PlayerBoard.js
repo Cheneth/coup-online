@@ -7,7 +7,7 @@ export default function PlayerBoard(props) {
             <span key={index} style={{display: "inline-block"}}>
                 <p>{player.name}</p>
                 <p>Coins: {player.money}</p>
-                <p>{player.influences.join(', ')}</p>
+                {/* <p>{player.influences.join(', ')}</p> */}
             </span>
         );
     }

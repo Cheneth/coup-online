@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-export default class ActionDecision extends Component {
+export default class ChallengeDecision extends Component {
 
     // constructor(props) {
     //     super(props)

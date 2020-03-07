@@ -28,7 +28,7 @@ buildDeck = () => {
 
 shuffleDeck = (deck) => {
     for(let i = 0; i < deck.length*2; i++) {
-        const one = Math.floor(Math.random()*(deck.length-1));
+        const one = i%deck.length
         const two = Math.floor(Math.random()*(deck.length-1));
         let temp = deck[one];
         deck[one] = deck[two];

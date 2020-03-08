@@ -107,7 +107,7 @@ class CoupGame{
             socket.on('g-actionDecision', (res) => {
                 console.log(108, res)
                 // res.action.target, res.action.action, res.action.source
-                console.log(bind.actions, res.action.action)
+                // console.log(bind.actions, res.action.action)
                 if(bind.actions[res.action.action].isChallengeable) {
                     bind.openChallenge(res.action, (bind.actions[res.action.action].blockableBy.length > 0))
                 } else if(res.action.action == 'foreign_aid') {
@@ -170,25 +170,37 @@ class CoupGame{
             });
             socket.on('g-revealDecision', (res) => {
                 console.log(171, res)
+                console.log(res.isBlock)
                 //if isBlock, prevaction should contain the prev action
                 //if isBlock is false, prevaction is action
                 // res.revealedCard, prevaction, counterAction, challengee, challenger, isBlock
                 const challengeeIndex = bind.nameIndexMap[res.challengee];
                 if(bind.isRevealOpen) {
                     if(res.isBlock) { //block challenge
-                        if(res.revealedCard == res.counterAction.claim) { //challenge failed
+                        if(res.revealedCard == res.counterAction.claim || (res.counterAction.counterAction == 'block_steal' && (res.revealedCard == 'ambassador' || res.revealedCard =='captain'))) { //challenge failed
+                            for(let i = 0; i < bind.players[challengeeIndex].influences.length; i++) { //revealed card needs to be replaced
+                                if(bind.players[challengeeIndex].influences[i] == res.revealedCard) {
+                                    bind.deck.push(bind.players[challengeeIndex].influences[i]);
+                                    bind.deck = gameUtils.shuffleDeck(bind.deck);
+                                    bind.players[challengeeIndex].influences.splice(i,1);
+                                    bind.players[challengeeIndex].influences.push(bind.deck.pop());
+                                    break;
+                                }
+                            }
+                            bind.updatePlayers();
                             bind.isChooseInfluenceOpen = true;
                             bind.gameSocket.to(bind.nameSocketMap[res.challenger]).emit('g-chooseInfluence');
-                            bind.nextTurn();
+                            // bind.nextTurn();
                         } else { //challenge succeeded
                             for(let i = 0; i < bind.players[challengeeIndex].influences.length; i++) {
                                 if(bind.players[challengeeIndex].influences[i] == res.revealedCard) {
                                     bind.deck.push(bind.players[challengeeIndex].influences[i]);
-                                    bind.deck = gameUtils.shuffleDeck(deck);
+                                    bind.deck = gameUtils.shuffleDeck(bind.deck);
                                     bind.players[challengeeIndex].influences.splice(i,1);
                                     break;
                                 }
                             }
+                            console.log(res.prevAction)
                             bind.applyAction(res.prevAction);
                         }
                     } else { //normal challenge
@@ -219,7 +231,7 @@ class CoupGame{
                     for(let i = 0; i < bind.players[playerIndex].influences.length; i++) {
                         if(bind.players[playerIndex].influences[i] == res.influence) {
                             bind.deck.push(bind.players[playerIndex].influences[i]);
-                            bind.deck = gameUtils.shuffleDeck(deck);
+                            bind.deck = gameUtils.shuffleDeck(bind.deck);
                             bind.players[playerIndex].influences.splice(i,1);
                             break;
                         }

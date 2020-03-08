@@ -51,14 +51,17 @@ export default class BlockDecision extends Component {
             blocker: this.props.name,
             isBlocking: true
         }
+        console.log(res)
         this.props.socket.emit('g-blockDecision', res)
         this.props.doneBlockVote();
     }
 
     pass = () => {
         const res = {
+            action: this.props.action,
             isBlocking: false
         }
+        console.log(res)
         this.props.socket.emit('g-blockDecision', res)
         this.props.doneBlockVote();
     }

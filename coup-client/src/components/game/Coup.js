@@ -5,6 +5,7 @@ import BlockChallengeDecision from './BlockChallengeDecision';
 import PlayerBoard from './PlayerBoard';
 import RevealDecision from './RevealDecision';
 import BlockDecision from './BlockDecision';
+import ChooseInfluence from './ChooseInfluence';
 
 export default class Coup extends Component {
 
@@ -20,6 +21,7 @@ export default class Coup extends Component {
              isChooseAction: false,
              revealingRes: null,
              blockingAction: null,
+             isChoosingInfluence: false,
              error: ''
         }
         const bind = this;
@@ -62,12 +64,18 @@ export default class Coup extends Component {
             }
         });
         this.props.socket.on('g-openBlock', (action) => {
-            console.log(action)
-            bind.setState({ blockingAction: action })
+            if(action.source !== bind.props.name) {
+                bind.setState({ blockingAction: action })
+             } else {
+                 bind.setState({ blockingAction: null }) 
+             }
         });
         this.props.socket.on('g-chooseReveal', (res) => {
             console.log(res)
             bind.setState({ revealingRes: res});
+        });
+        this.props.socket.on('g-chooseInfluence', () => {
+            bind.setState({ isChoosingInfluence: true });
         });
         this.props.socket.on('g-closeChallenge', () => {
             bind.setState({ action: null });
@@ -91,6 +99,9 @@ export default class Coup extends Component {
     doneReveal = () => {
         this.setState({ revealingRes: null });
     }
+    doneChooseInfluence = () => {
+        this.setState({ isChoosingInfluence: false })
+    }
     
     render() {
         let actionDecision = null
@@ -98,6 +109,7 @@ export default class Coup extends Component {
         let revealDecision = null
         let challengeDecision = null
         let blockChallengeDecision = null
+        let chooseInfluenceDecision = null
         let blockDecision = null
         let influences = null
         if(this.state.isChooseAction) {
@@ -107,7 +119,10 @@ export default class Coup extends Component {
             currentPlayer = <p>It is <b>{this.state.currentPlayer}</b>'s turn</p>
         }
         if(this.state.revealingRes) {
-            revealDecision = <RevealDecision doneReveal={this.doneReveal} name ={this.props.name} socket={this.props.socket} res={this.state.revealingRes} influences = {this.state.players.filter(x => x.name === this.props.name)[0].influences}></RevealDecision>
+            revealDecision = <RevealDecision doneReveal={this.doneReveal} name ={this.props.name} socket={this.props.socket} res={this.state.revealingRes} influences={this.state.players.filter(x => x.name === this.props.name)[0].influences}></RevealDecision>
+        }
+        if(this.state.isChoosingInfluence) {
+            chooseInfluenceDecision = <ChooseInfluence doneChooseInfluence={this.doneChooseInfluence} name ={this.props.name} socket={this.props.socket} influences={this.state.players.filter(x => x.name === this.props.name)[0].influences}></ChooseInfluence>
         }
         if(this.state.action != null) {
             challengeDecision = <ChallengeDecision doneChallengeVote={this.doneChallengeBlockingVote} name={this.props.name} action={this.state.action} socket={this.props.socket} ></ChallengeDecision>
@@ -130,6 +145,7 @@ export default class Coup extends Component {
                 <PlayerBoard players={this.state.players}></PlayerBoard>
                 <br></br>
                 {revealDecision}
+                {chooseInfluenceDecision}
                 {actionDecision}
                 {challengeDecision}
                 {blockChallengeDecision}

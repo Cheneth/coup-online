@@ -402,9 +402,6 @@ class CoupGame{
     }
 
     nextTurn() {
-        console.log(405)
-        console.log(this.players)
-        console.log(this.aliveCount)
         this.players.forEach(x => {
             console.log(x.influences)
             if(x.influences.length == 0 && !x.isDead) {// player is dead
@@ -415,9 +412,9 @@ class CoupGame{
         });
         if(this.aliveCount == 1) {
             let winner = null
-            for(let i = 0; i < players.length; i++) {
-                if(players[i].influences.length > 0) {
-                    winner = players[i].name; 
+            for(let i = 0; i < this.players.length; i++) {
+                if(this.players[i].influences.length > 0) {
+                    winner = this.players[i].name; 
                 }
             }
             this.gameSocket.emit('g-gameOver', winner);

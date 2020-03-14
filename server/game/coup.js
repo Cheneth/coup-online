@@ -369,6 +369,7 @@ class CoupGame{
             // no nextTurn() because it is called in "on chooseInfleunceDecision"
         }else if(execute == 'exchange') {
             const drawTwo = [this.deck.pop(), this.deck.pop()]
+            this.isExchangeOpen = true;
             this.gameSocket.to(this.nameSocketMap[source]).emit('g-openExchange', drawTwo);
              // no nextTurn() because it is called in "on chooseExchangeDecision"
         }else if(execute == 'steal') {

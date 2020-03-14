@@ -104,6 +104,14 @@ class CoupGame{
         this.players.map(x => {
             const socket = this.gameSocket.sockets[x.socketID];
             let bind = this
+            socket.on('g-deductCoins', (res) => {
+                //res.amount res.source
+                console.log('deducting ' + res.amount + ' coins from ' + res.source )
+                const sourceIndex = bind.nameIndexMap[res.source];
+                bind.players[sourceIndex].money -= res.amount;
+                bind.updatePlayers();
+
+            })
             socket.on('g-actionDecision', (res) => {
                 console.log(108, res)
                 // res.action.target, res.action.action, res.action.source
@@ -394,8 +402,12 @@ class CoupGame{
     }
 
     nextTurn() {
+        console.log(405)
+        console.log(this.players)
+        console.log(this.aliveCount)
         this.players.forEach(x => {
-            if(x.influences.length == 0) {// player is dead
+            console.log(x.influences)
+            if(x.influences.length == 0 && !x.isDead) {// player is dead
                 this.aliveCount-=1;
                 x.isDead = true;
                 x.money = 0;

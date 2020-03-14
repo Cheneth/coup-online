@@ -6,6 +6,7 @@ import PlayerBoard from './PlayerBoard';
 import RevealDecision from './RevealDecision';
 import BlockDecision from './BlockDecision';
 import ChooseInfluence from './ChooseInfluence';
+import ExchangeInfluences from './ExchangeInfluences';
 
 export default class Coup extends Component {
 
@@ -22,9 +23,14 @@ export default class Coup extends Component {
              revealingRes: null,
              blockingAction: null,
              isChoosingInfluence: false,
-             error: ''
+             exchangeInfluence: null,
+             error: '',
+             winner: ''
         }
         const bind = this;
+        this.props.socket.on('g-gameOver', (winner) => {
+            bind.setState({winner: `${winner} Wins!`})
+        })
         this.props.socket.on('g-updatePlayers', (players) => {
             players = players.filter(x => !x.isDead);
             console.log(players)
@@ -49,6 +55,10 @@ export default class Coup extends Component {
         
             bind.setState({ isChooseAction: true})
         });
+        this.props.socket.on('g-openExchange', (drawTwo) => {
+            let influences = [...bind.state.players[bind.state.playerIndex].influences, ...drawTwo];
+            bind.setState({ exchangeInfluence: influences });
+        })
         this.props.socket.on('g-openChallenge', (action) => {
             if(action.source !== bind.props.name) {
                bind.setState({ action }) 
@@ -110,6 +120,9 @@ export default class Coup extends Component {
     doneChooseInfluence = () => {
         this.setState({ isChoosingInfluence: false })
     }
+    doneExchangeInfluence = () => {
+        this.setState({ exchangeInfluence: null })
+    }
     
     render() {
         let actionDecision = null
@@ -120,6 +133,7 @@ export default class Coup extends Component {
         let chooseInfluenceDecision = null
         let blockDecision = null
         let influences = null
+        let exchangeInfluences = null
         if(this.state.isChooseAction) {
             actionDecision = <ActionDecision doneAction={this.doneAction} deductCoins={this.deductCoins} name={this.props.name} socket={this.props.socket} money={this.state.players[this.state.playerIndex].money} players={this.state.players.map(x => x.name).filter(x => !x.isDead || x !== this.props.name)}></ActionDecision>
         }
@@ -134,6 +148,9 @@ export default class Coup extends Component {
         }
         if(this.state.action != null) {
             challengeDecision = <ChallengeDecision doneChallengeVote={this.doneChallengeBlockingVote} name={this.props.name} action={this.state.action} socket={this.props.socket} ></ChallengeDecision>
+        }
+        if(this.state.exchangeInfluence) {
+            exchangeInfluences = <ExchangeInfluences doneExchangeInfluence={this.doneExchangeInfluence} name={this.props.name} influences={this.state.exchangeInfluence} socket={this.props.socket}></ExchangeInfluences>
         }
         if(this.state.blockChallengeRes != null) {
             blockChallengeDecision = <BlockChallengeDecision doneBlockChallengeVote={this.doneChallengeBlockingVote} name={this.props.name} prevAction={this.state.blockChallengeRes.prevAction} counterAction={this.state.blockChallengeRes.counterAction} socket={this.props.socket} ></BlockChallengeDecision>
@@ -155,9 +172,11 @@ export default class Coup extends Component {
                 {revealDecision}
                 {chooseInfluenceDecision}
                 {actionDecision}
+                {exchangeInfluences}
                 {challengeDecision}
                 {blockChallengeDecision}
                 {blockDecision}
+                <b>{this.state.winner}</b>
             </div>
         )
     }

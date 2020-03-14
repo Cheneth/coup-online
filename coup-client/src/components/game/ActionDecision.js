@@ -62,7 +62,7 @@ export default class ActionDecision extends Component {
             controls = this.props.players.filter(x => x !== this.props.name).map((x, index) => {
                 return <button key={index} onClick={() => this.pickTarget(x)}>{x}</button>
             })
-        } else {
+        } else if(this.props.money < 10) {
            controls = ( 
            <>
                 <button onClick={() => this.chooseAction('income')}>Income</button>
@@ -72,13 +72,15 @@ export default class ActionDecision extends Component {
                 <button onClick={() => this.deductCoins('assassinate')}>Assassinate</button>
                 <button onClick={() => this.chooseAction('tax')}>Tax</button>
                 <button onClick={() => this.chooseAction('exchange')}>Exchange</button>
-                <p>{this.state.actionError}</p>
            </> 
            )
+        } else { //money over 10, has to coup
+            controls = <button onClick={() => this.deductCoins('coup')}>Coup</button>
         }
         return (
             <div>
                {controls}
+               <p>{this.state.actionError}</p>
             </div>
         )
     }

@@ -26,9 +26,9 @@ export default class Coup extends Component {
         }
         const bind = this;
         this.props.socket.on('g-updatePlayers', (players) => {
+            players = players.filter(x => !x.isDead);
             console.log(players)
-            bind.setState({ players });
-            let playerIndex = 0;
+            let playerIndex = null;
             for(let i = 0; i < players.length; i++) {
                 console.log(players[i].name, this.props.name)
                 if(players[i].name === this.props.name) {
@@ -37,7 +37,7 @@ export default class Coup extends Component {
                 }
             }
             console.log(playerIndex)
-            bind.setState({playerIndex})
+            bind.setState({playerIndex, players});
             
         });
         this.props.socket.on('g-updateCurrentPlayer', (currentPlayer) => {
@@ -88,6 +88,14 @@ export default class Coup extends Component {
         });
     }
 
+    deductCoins = (amount) => {
+        let res = {
+            source: this.props.name,
+            amount: amount
+        }
+        this.props.socket.emit('g-deductCoins', res);
+    }
+
     doneAction = () => {
         this.setState({ isChooseAction: false })
     }
@@ -113,7 +121,7 @@ export default class Coup extends Component {
         let blockDecision = null
         let influences = null
         if(this.state.isChooseAction) {
-            actionDecision = <ActionDecision doneAction={this.doneAction} name={this.props.name} socket={this.props.socket} players={this.state.players.map(x => x.name).filter(x => !x.isDead || x !== this.props.name)}></ActionDecision>
+            actionDecision = <ActionDecision doneAction={this.doneAction} deductCoins={this.deductCoins} name={this.props.name} socket={this.props.socket} money={this.state.players[this.state.playerIndex].money} players={this.state.players.map(x => x.name).filter(x => !x.isDead || x !== this.props.name)}></ActionDecision>
         }
         if(this.state.currentPlayer) {
             currentPlayer = <p>It is <b>{this.state.currentPlayer}</b>'s turn</p>

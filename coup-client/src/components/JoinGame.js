@@ -4,6 +4,8 @@ import Coup from './game/Coup';
 
 const axios = require('axios');
 const baseUrl = 'http://localhost:8000'
+// const baseUrl = 'https://60c79c5e.ngrok.io'
+
 
 export default class JoinGame extends Component {
 

@@ -64,24 +64,26 @@ export default class ActionDecision extends Component {
             })
         } else if(this.props.money < 10) {
            controls = ( 
-           <>
+           <>   
                 <button onClick={() => this.chooseAction('income')}>Income</button>
                 <button onClick={() => this.deductCoins('coup')}>Coup</button>
                 <button onClick={() => this.chooseAction('foreign_aid')}>Foreign Aid</button>
-                <button onClick={() => this.pickingTarget('steal')}>Steal</button>
-                <button onClick={() => this.deductCoins('assassinate')}>Assassinate</button>
-                <button onClick={() => this.chooseAction('tax')}>Tax</button>
-                <button onClick={() => this.chooseAction('exchange')}>Exchange</button>
+                <button id="captain" onClick={() => this.pickingTarget('steal')}>Steal</button>
+                <button id="assassin" onClick={() => this.deductCoins('assassinate')}>Assassinate</button>
+                <button id="duke" onClick={() => this.chooseAction('tax')}>Tax</button>
+                <button id="ambassador" onClick={() => this.chooseAction('exchange')}>Exchange</button>
            </> 
            )
         } else { //money over 10, has to coup
             controls = <button onClick={() => this.deductCoins('coup')}>Coup</button>
         }
-        return (
-            <div>
+        return (<>
+            <p className="DecisionTitle">Choose an action</p>
+            <div className="DecisionButtonsContainer">
                {controls}
                <p>{this.state.actionError}</p>
             </div>
+            </>
         )
     }
 }

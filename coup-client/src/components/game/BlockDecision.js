@@ -91,11 +91,11 @@ export default class BlockDecision extends Component {
         }
         
         return (
-            <div>
+            <>
                {control}
                {pickClaim}
-               <button onClick={() => this.pass()}>Pass</button>
-            </div>
+               {/* <button onClick={() => this.pass()}>Pass</button> */}
+            </>
         )
     }
 }

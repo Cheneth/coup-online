@@ -7,6 +7,7 @@ import RevealDecision from './RevealDecision';
 import BlockDecision from './BlockDecision';
 import ChooseInfluence from './ChooseInfluence';
 import ExchangeInfluences from './ExchangeInfluences';
+import './CoupStyles.css';
 
 export default class Coup extends Component {
 
@@ -123,6 +124,38 @@ export default class Coup extends Component {
     doneExchangeInfluence = () => {
         this.setState({ exchangeInfluence: null })
     }
+    pass = () => {
+        if(this.state.action != null) { //challengeDecision
+            let res = {
+                isChallenging: false,
+                action: this.state.action
+            }
+            console.log(res)
+            this.props.socket.emit('g-challengeDecision', res);
+        }else if(this.state.blockChallengeRes != null) { //BlockChallengeDecision
+            let res = {
+                isChallenging: false
+            }
+            console.log(res)
+            this.props.socket.emit('g-blockChallengeDecision', res);
+        }else if(this.state.blockingAction !== null) { //BlockDecision
+            const res = {
+                action: this.state.blockingAction,
+                isBlocking: false
+            }
+            console.log(res)
+            this.props.socket.emit('g-blockDecision', res)
+        }
+        this.doneChallengeBlockingVote();
+    }
+
+    influenceColorMap = {
+        duke: '#DD6C75',
+        captain: '#80C6E5',
+        assassin: '#2B2B2B',
+        contessa: '#E35646',
+        ambassador: '#B4CA1F'
+    }
     
     render() {
         let actionDecision = null
@@ -133,6 +166,8 @@ export default class Coup extends Component {
         let chooseInfluenceDecision = null
         let blockDecision = null
         let influences = null
+        let pass = null
+        let coins = null
         let exchangeInfluences = null
         if(this.state.isChooseAction) {
             actionDecision = <ActionDecision doneAction={this.doneAction} deductCoins={this.deductCoins} name={this.props.name} socket={this.props.socket} money={this.state.players[this.state.playerIndex].money} players={this.state.players.map(x => x.name).filter(x => !x.isDead || x !== this.props.name)}></ActionDecision>
@@ -145,6 +180,9 @@ export default class Coup extends Component {
         }
         if(this.state.isChoosingInfluence) {
             chooseInfluenceDecision = <ChooseInfluence doneChooseInfluence={this.doneChooseInfluence} name ={this.props.name} socket={this.props.socket} influences={this.state.players.filter(x => x.name === this.props.name)[0].influences}></ChooseInfluence>
+        }
+        if(this.state.action != null || this.state.blockChallengeRes != null || this.state.blockingAction !== null){
+            pass = <button onClick={() => this.pass()}>Pass</button>
         }
         if(this.state.action != null) {
             challengeDecision = <ChallengeDecision doneChallengeVote={this.doneChallengeBlockingVote} name={this.props.name} action={this.state.action} socket={this.props.socket} ></ChallengeDecision>
@@ -159,23 +197,46 @@ export default class Coup extends Component {
             blockDecision = <BlockDecision doneBlockVote={this.doneChallengeBlockingVote} name={this.props.name} action={this.state.blockingAction} socket={this.props.socket} ></BlockDecision>
         }
         if(this.state.playerIndex != null) {
-            influences = <p>{this.state.players[this.state.playerIndex].influences.join(', ')}</p>
+            influences = this.state.players[this.state.playerIndex].influences.map(influence => {
+                return  <div className="InfluenceUnitContainer">
+                            <span className="circle" style={{backgroundColor: `${this.influenceColorMap[influence]}`}}></span>
+                            <br></br>
+                            <h3>{influence}</h3>
+                        </div>
+                
+                })
+            
+            coins = <p>Coins: {this.state.players[this.state.playerIndex].money}</p>
         }
         return (
-            <div>
-                <p>You are: {this.props.name}</p>
-                <p>Your Influences:</p>
-                {influences}
-                {currentPlayer}
+            <div className="GameContainer">
+                <div className="GameHeader">
+                    <div className="PlayerInfo">
+                        <p>You are: {this.props.name}</p>
+                        {coins}
+                    </div>
+                    <div className="CurrentPlayer">
+                        {currentPlayer}
+                    </div>
+                    
+                </div>
+                <div className="InfluenceSection">
+                    <p>Your Influences</p>
+                    <br></br>
+                    {influences}
+                </div>
                 <PlayerBoard players={this.state.players}></PlayerBoard>
                 <br></br>
-                {revealDecision}
-                {chooseInfluenceDecision}
-                {actionDecision}
-                {exchangeInfluences}
-                {challengeDecision}
-                {blockChallengeDecision}
-                {blockDecision}
+                <div className="DecisionsSection">
+                    {revealDecision}
+                    {chooseInfluenceDecision}
+                    {actionDecision}
+                    {exchangeInfluences}
+                    {challengeDecision}
+                    {blockChallengeDecision}
+                    {blockDecision}
+                    {pass}
+                </div>
                 <b>{this.state.winner}</b>
             </div>
         )

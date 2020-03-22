@@ -18,13 +18,25 @@ export default class ChallengeDecision extends Component {
         this.props.doneChallengeVote();
     }
 
+    challengeText = (action, source, target) => {
+        if(action === 'steal') {
+            return <p><b>{source}</b> is tring to Steal from <b>{target}</b></p>
+        }else if(action === 'tax') {
+            return <p><b>{source}</b> is trying to collect Tax (3 coins)</p>
+        }else if(action === 'assassinate') {
+            return <p><b>{source}</b> is trying to Assassinate <b>{target}</b></p>
+        }else if(action === 'exchange') {
+            return <p><b>{source}</b> is trying to Exchange their influences</p>
+        }
+    }
+
     render() {
         return (
-            <div>
-                <p>{this.props.action.source} is trying to use {this.props.action.action} on {this.props.action.target}</p>
+            <>
+                {this.challengeText(this.props.action.action, this.props.action.source, this.props.action.target)}
                 <button onClick={() => this.vote(true)}>Challenge</button>
-                <button onClick={() => this.vote(false)}>Pass</button>
-            </div>
+                {/* <button onClick={() => this.vote(false)}>Pass</button> */}
+            </>
         )
     }
 }

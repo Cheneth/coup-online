@@ -19,7 +19,7 @@ export default class ChooseInfluence extends Component {
         })
         return ( 
             <div>
-                <p>Choose an influence to lose </p>
+                <p className="DecisionTitle">Choose an influence to lose </p>
                 {influences}
             </div>
         )

@@ -54,11 +54,20 @@ buildNameIndexMap = (players) => {
 }
 
 buildPlayers = (players) => {
+    colors = ['#73C373', '#7AB8D3', '#DD6C75', '#8C6CE6', '#EA9158', '#CB8F8F', '#FFC303']
+    for(let i = 0; i < colors.length*2; i++) {
+        const one = i%colors.length
+        const two = Math.floor(Math.random()*(colors.length-1));
+        let temp = colors[one];
+        colors[one] = colors[two];
+        colors[two] = temp;
+    }
     players.forEach(x => {
         delete x.chosen;
         x.money = 2;
         x.influences = [];
         x.isDead = false;
+        x.color = colors.pop();
         delete x.isReady;
     });
     console.log(players);

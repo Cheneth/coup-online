@@ -32,7 +32,6 @@ app.get('/createNamespace', function (req, res) {
     while(newNamespace === '' || (newNamespace in namespaces)) {
         newNamespace = generateNamespace(); //default length 6
     }
-
     const newSocket = io.of(`/${newNamespace}`);
     openSocket(newSocket, `/${newNamespace}`);
     namespaces[newNamespace] = null;
@@ -46,7 +45,6 @@ app.get('/exists/:namespace', function (req, res) { //returns bool
 })
 
 //game namespace: oneRoom
-
 openSocket = (gameSocket, namespace) => {
 
     let players = []; //includes deleted for index purposes
@@ -106,7 +104,7 @@ openSocket = (gameSocket, namespace) => {
 
         socket.on('startGameSignal', (players) => {
             gameSocket.emit('startGame');
-            startGame(players, gameSocket);
+            startGame(players, gameSocket, namespace);
         })
     
         socket.on('disconnect', () => {
@@ -124,18 +122,28 @@ openSocket = (gameSocket, namespace) => {
                     }
                 }
             })
+            console.log(Object.keys(gameSocket['sockets']).length)
             updatePartyList();
         })
-
-        //this section is related to the game -->
-
     });
+    let checkEmptyInterval = setInterval(() => {
+        console.log(Object.keys(namespaces))
+        if(Object.keys(gameSocket['sockets']).length == 0) {
+            socket.removeAllListeners();
+            delete io.nsps[namespace];
+            if(namespaces[namespace] != null) {
+                delete namespaces[namespace]
+            }
+            clearInterval(checkEmptyInterval)
+            console.log(namespace 
+                + 'deleted')
+        }
+    }, 300000)
 }
 
-startGame = (players, gameSocket) => {
-    
-    const game = new CoupGame(players, gameSocket);
-    game.start();
+startGame = (players, gameSocket, namespace) => {
+    namespaces[namespace] = new CoupGame(players, gameSocket);
+    namespaces[namespace].start();
 }
 
 server.listen(port, function(){

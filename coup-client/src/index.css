@@ -8,6 +8,9 @@ body {
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  font-family: 'Muli', sans-serif;
+}
+
+p, h1,h2,h3{
+  font-family: 'Muli', sans-serif;
 }

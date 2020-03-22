@@ -1,0 +1,115 @@
+.PlayerInfo {
+    text-align: left;
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    border: 2px solid #707070;
+    border-radius: 5px;
+    line-height: 40%;
+    width: fit-content;
+    padding-left: 10px;
+    padding-right: 20px;
+}
+
+.InfluenceSection p{
+    text-align: left;
+    margin-left: 22px;
+}
+
+.InfluenceSection h3{
+    text-align: center;
+}
+
+.InfluenceUnitContainer {
+    width: 110px;
+    text-align: center;
+    margin-left: 15px;
+    margin-right: 15px;
+    line-height: 30%;
+    display: inline-block;
+}
+
+.CurrentPlayer {
+    text-align: right;
+    position: absolute;
+    right: 15px;
+    top: 5px;
+}
+
+.GameHeader {
+    position: relative;
+    height: 10VH;
+}
+
+.GameContainer {
+    
+}
+
+.circle {
+    height: 30px;
+    width: 30px;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
+  }
+.DecisionsSection button {
+    min-width: 100px;
+    height: 30px;
+    border-radius: 5px;
+    font-family: 'Muli', sans-serif;
+    background-color: #BCBCBC;
+    border: none;
+    color: white;
+    margin: 20px;
+    margin-bottom: 0px;
+    text-align: left;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 12px;
+}
+#captain {
+    background-color: #80C6E5;
+}
+#duke {
+    background-color: #DD6C75;
+}
+#assassin {
+    background-color: #2B2B2B;
+}
+#contessa {
+    background-color: #E35646;
+}
+#ambassador {
+    background-color: #B4CA1F;
+}
+.DecisionTitle {
+    text-align: left;
+    margin-left: 22px;
+}
+
+@media only screen and (min-width: 1024px) {
+    .PlayerInfo {
+      left: 10VW;
+      top: 5VH;
+    }
+    .CurrentPlayer {
+        text-align: right;
+        position: absolute;
+        right: 10VW;
+        top: 5VH;
+    }
+    .InfluenceSection p{
+        margin-left: 10VW;
+    }
+    .GameHeader {
+        height: 15VH;
+    }
+    .DecisionTitle {
+        margin-left: 10VW;
+    }
+    .DecisionButtonsContainer  {
+        text-align: center;
+        width: 80%;
+        margin-left: 10%;
+    }
+  }

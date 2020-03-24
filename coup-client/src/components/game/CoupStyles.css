@@ -11,9 +11,16 @@
     padding-right: 20px;
 }
 
+.InfluenceSection {
+    background-color: #F2F2F2;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    /* width: 300px; */
+    display: inline-block;
+}
+
 .InfluenceSection p{
-    text-align: left;
-    margin-left: 22px;
+    text-align: center;
 }
 
 .InfluenceSection h3{
@@ -36,13 +43,80 @@
     top: 5px;
 }
 
+.EventLogContainer {
+    border-right: 2px solid #707070;
+    /* border-left: 0px; */
+    padding-right: 5px;
+    padding-left: 5px;
+    position: absolute;
+    font-size: 12px;
+    right: 15px;
+    top: 60px;
+    text-align: right;
+    line-height: 40%;
+}
+.bold {
+    font-weight: bold;
+}
+.new {
+    animation: fadeIn ease 1s;
+    -webkit-animation: fadeIn ease 1s;
+    -moz-animation: fadeIn ease 1s;
+    -o-animation: fadeIn ease 1s;
+    -ms-animation: fadeIn ease 1s;
+  }
+  @keyframes fadeIn {
+    0% {
+      opacity:0;
+    }
+    100% {
+      opacity:1;
+    }
+  }
+  
+  @-moz-keyframes fadeIn {
+    0% {
+      opacity:0;
+    }
+    100% {
+      opacity:1;
+    }
+  }
+  
+  @-webkit-keyframes fadeIn {
+    0% {
+      opacity:0;
+    }
+    100% {
+      opacity:1;
+    }
+  }
+  
+  @-o-keyframes fadeIn {
+    0% {
+      opacity:0;
+    }
+    100% {
+      opacity:1;
+    }
+  }
+  
+  @-ms-keyframes fadeIn {
+    0% {
+      opacity:0;
+    }
+    100% {
+      opacity:1;
+  }
+}
+
 .GameHeader {
     position: relative;
-    height: 10VH;
+    height: 22VH;
 }
 
 .GameContainer {
-    
+    text-align: center;
 }
 
 .circle {
@@ -98,8 +172,11 @@
         right: 10VW;
         top: 5VH;
     }
-    .InfluenceSection p{
-        margin-left: 10VW;
+    .EventLogContainer {
+        text-align: right;
+        position: absolute;
+        right: 10VW;
+        top: 10VH;
     }
     .GameHeader {
         height: 15VH;

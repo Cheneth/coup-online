@@ -16,7 +16,7 @@ export default function PlayerBoard(props) {
         boardItems = <b>{props.players[0]} Wins!</b>
     }
     return (
-        <div style={{textAlign: "center"}}>
+        <div className="PlayerBoardContainer" style={{textAlign: "center"}}>
             {boardItems}
         </div>
     )

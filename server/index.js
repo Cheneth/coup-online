@@ -49,6 +49,9 @@ openSocket = (gameSocket, namespace) => {
     let players = []; //includes deleted for index purposes
     let partyMembers = []; //actual members
     let partyLeader = ''
+    let started = false;
+    let bind = this;
+
     gameSocket.on('connection', (socket) => {
         console.log('id: ' + socket.id);
         players.push({
@@ -74,6 +77,10 @@ openSocket = (gameSocket, namespace) => {
         // })
 
         socket.on('setName', (name) => { //when client joins, it will immediately set its name
+            if(bind.started) {
+                gameSocket.to(players[index].socket_id).emit("joinFailed", 'game_already_started');
+                return
+            }
             if(!players.map(x => x.player).includes(name)){
                 if(partyMembers.length >= 7) {
                     gameSocket.to(players[index].socket_id).emit("joinFailed", 'party_full');
@@ -102,6 +109,7 @@ openSocket = (gameSocket, namespace) => {
         })
 
         socket.on('startGameSignal', (players) => {
+            bind.started = true;
             gameSocket.emit('startGame');
             startGame(players, gameSocket, namespace);
         })

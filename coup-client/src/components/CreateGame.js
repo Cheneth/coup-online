@@ -4,8 +4,8 @@ import { ReactSortable } from "react-sortablejs";
 import Coup from './game/Coup';
 
 const axios = require('axios');
-const baseUrl = 'http://localhost:8000' 
-// const baseUrl = 'https://60c79c5e.ngrok.io'
+// const baseUrl = 'http://localhost:8000' 
+const baseUrl = 'https://rocky-stream-49978.herokuapp.com'
 
 export default class CreateGame extends Component {
 
@@ -15,6 +15,7 @@ export default class CreateGame extends Component {
         this.state = {
             name: '',
             roomCode: '',
+            copied: false,
             isInRoom: false,
             isLoading: false,
             players: [],
@@ -22,7 +23,8 @@ export default class CreateGame extends Component {
             isGameStarted: false,
             errorMsg: '',
             canStart: false,
-            socket: null
+            socket: null,
+
         }
     }
 
@@ -83,7 +85,7 @@ export default class CreateGame extends Component {
         axios.get(`${baseUrl}/createNamespace`)
             .then(function (res) {
                 console.log(res);
-                bind.setState({ roomCode: res.data.namespace });
+                bind.setState({ roomCode: res.data.namespace, errorMsg: '' });
                 bind.joinParty();
             })
             .catch(function (err) {
@@ -103,52 +105,75 @@ export default class CreateGame extends Component {
         })
     }
 
+    copyCode = () => {
+        var dummy = document.createElement("textarea");
+        document.body.appendChild(dummy);
+        dummy.value = this.state.roomCode;
+        dummy.select();
+        document.execCommand("copy");
+        document.body.removeChild(dummy);
+        this.setState({copied: true})
+    }
+
     render() {
         if(this.state.isGameStarted) {
             return (<Coup name={this.state.name} socket={this.state.socket}></Coup>)
         }
         let error = null;
         let roomCode = null;
-        let startGame = null
+        let startGame = null;
+        let createButton = null;
+        if(!this.state.isInRoom) {
+            createButton = <>
+            <button className="createButton" onClick={this.createParty} disabled={this.state.isLoading}>{this.state.isLoading ? 'Creating...': 'Create'}</button>
+            <br></br>
+            </>
+        }
         if(this.state.isError) {
             error = <b>{this.state.errorMsg}</b>
         }
-        if(this.state.roomCode !== '') {
-            roomCode = <>
-                    <p>ROOM CODE: <b>{this.state.roomCode}</b></p>
-                </>
+        if(this.state.roomCode !== '' && !this.state.isLoading) {
+            roomCode = <div>
+                    <p>ROOM CODE: <br></br> <br></br><b className="RoomCode" onClick={this.copyCode}>{this.state.roomCode} <span class="iconify" data-icon="typcn-clipboard" data-inline="true"></span></b></p>
+                    {this.state.copied ? <p>Copied to clipboard</p> : null}
+                </div>
         }
         if(this.state.canStart) {
-            startGame = <button onClick={this.startGame}>Start Game</button>
+            startGame = <button className="startGameButton" onClick={this.startGame}>Start Game</button>
         }
         return (
-            <div>
-                <p>Your Name</p>
+            <div className="createGameContainer">
+                <p>Please enter your name</p>
                 <input
-                    type="text" value={this.state.name} disabled={this.state.isLoading}
+                    type="text" value={this.state.name} disabled={this.state.isLoading || this.state.isInRoom}
                     onChange={e => this.onNameChange(e.target.value)}
                 />
-                <button onClick={this.createParty} disabled={this.state.isLoading || this.state.isInRoom}>Create</button>
                 <br></br>
+                {createButton}
                 {error}
                 <br></br>
                 {roomCode}
-
-                <ReactSortable list={this.state.players} setList={newState => this.setState({ players: newState })}>
-                    {this.state.players.map((item,index) => {
-                        let ready = null
-                        if(item.isReady) {
-                            ready = <b style={{ color: 'green' }}>Ready!</b>
-                        } else {
-                            ready = <b style={{ color: 'red' }}>Not Ready</b>
+                <div className="readyUnitContainer">
+                    <ReactSortable list={this.state.players} setList={newState => this.setState({ players: newState })}>
+                        {this.state.players.map((item,index) => {
+                            let ready = null
+                            let readyUnitColor = '#E46258'
+                            if(item.isReady) {
+                                ready = <b>Ready!</b>
+                                readyUnitColor = '#73C373'
+                            } else {
+                                ready = <b>Not Ready</b>
+                            }
+                            return (
+                                    <div className="readyUnit" style={{backgroundColor: readyUnitColor}} key={index}>
+                                        <p >{index+1}. {item.name} {ready}</p>
+                                    </div>
+                            )
+                            })
                         }
-                        return (
-                            <div key={index}>
-                                <p >{index+1}. {item.name} {ready}</p>
-                            </div>)
-                        })
-                    }
-                </ReactSortable>
+                    </ReactSortable>
+                </div>
+                
                 {startGame}
             </div>
                 

@@ -4,14 +4,19 @@ import { Link } from "react-router-dom";
 export default class Home extends Component {
     render() {
         return (
-            <div>
+            <>
+            <div className="homeContainer">
+                <h1>Welcome to Coup</h1>
+                <p>A game of deduction and deception</p>
                 <div className="input-group-btn">
-                    <Link to="/create" >Create Game</Link>
+                    <Link className="home" to="/create" >Create Game</Link>
                 </div>
                 <div className="input-group-btn">
-                    <Link to="/join" >Join Game</Link>
+                    <Link className="home" to="/join" >Join Game</Link>
                 </div>
             </div>
+            <p className="footer">Made by Ethan Chen</p>
+            </>
         )
     }
 }

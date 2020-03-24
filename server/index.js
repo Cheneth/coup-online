@@ -46,7 +46,6 @@ app.get('/exists/:namespace', function (req, res) { //returns bool
 
 //game namespace: oneRoom
 openSocket = (gameSocket, namespace) => {
-
     let players = []; //includes deleted for index purposes
     let partyMembers = []; //actual members
     let partyLeader = ''
@@ -117,6 +116,7 @@ openSocket = (gameSocket, namespace) => {
                         gameSocket.emit('leaderDisconnect', 'leader_disconnected');
                         socket.removeAllListeners();
                         delete io.nsps[namespace];
+                        delete namespaces[namespace.substring(1)]
                         players = [];
                         partyMembers = []
                     }
@@ -127,25 +127,24 @@ openSocket = (gameSocket, namespace) => {
         })
     });
     let checkEmptyInterval = setInterval(() => {
-        console.log(Object.keys(namespaces))
+        // console.log(Object.keys(namespaces))
         if(Object.keys(gameSocket['sockets']).length == 0) {
-            socket.removeAllListeners();
             delete io.nsps[namespace];
             if(namespaces[namespace] != null) {
-                delete namespaces[namespace]
+                delete namespaces[namespace.substring(1)]
             }
             clearInterval(checkEmptyInterval)
             console.log(namespace 
                 + 'deleted')
         }
-    }, 300000)
+    }, 10000)
 }
 
 startGame = (players, gameSocket, namespace) => {
-    namespaces[namespace] = new CoupGame(players, gameSocket);
-    namespaces[namespace].start();
+    namespaces[namespace.substring(1)] = new CoupGame(players, gameSocket);
+    namespaces[namespace.substring(1)].start();
 }
 
-server.listen(port, function(){
-    console.log('listening on 8000');
+server.listen(process.env.PORT || port, function(){
+    console.log(`listening on ${process.env.PORT || port}`);
 });

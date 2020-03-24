@@ -133,6 +133,7 @@ class CoupGame{
                         bind.closeChallenge();
                         //TODO reveal
                         // reveal(action, counterAction, challengee, challenger, isBlock)
+                        bind.gameSocket.emit("g-addLog", `${res.challenger} challenged ${res.challengee}`)
                         bind.reveal(res.action, null, res.challengee, res.challenger, false);
                     } else if(bind.votes+1 == bind.aliveCount-1) {
                         //then it is a pass
@@ -149,7 +150,7 @@ class CoupGame{
                 if(bind.isChallengeBlockOpen) {
                     if(res.isChallenging) {
                         bind.closeChallenge();
-                        //TODO reveal
+                        bind.gameSocket.emit("g-addLog", `${res.challenger} challenged ${res.challengee}'s block`)
                         bind.reveal(res.prevAction, res.counterAction, res.challengee, res.challenger, true);
                     } else if(bind.votes+1 == bind.aliveCount-1) {
                         //then it is a pass
@@ -166,6 +167,7 @@ class CoupGame{
                 if(bind.isChallengeBlockOpen) {
                     if(res.isBlocking) {
                         bind.closeChallenge();
+                        bind.gameSocket.emit("g-addLog", `${res.blocker} blocked ${res.blockee}`)
                         bind.openBlockChallenge(res.counterAction, res.blockee, res.prevAction);
                     } else if(bind.votes+1 == bind.aliveCount-1) {
                         //then it is a pass
@@ -184,8 +186,10 @@ class CoupGame{
                 // res.revealedCard, prevaction, counterAction, challengee, challenger, isBlock
                 const challengeeIndex = bind.nameIndexMap[res.challengee];
                 if(bind.isRevealOpen) {
+                    bind.isRevealOpen = false;
                     if(res.isBlock) { //block challenge
                         if(res.revealedCard == res.counterAction.claim || (res.counterAction.counterAction == 'block_steal' && (res.revealedCard == 'ambassador' || res.revealedCard =='captain'))) { //challenge failed
+                            bind.gameSocket.emit("g-addLog", `${res.challenger}'s challenge on ${res.challengee}'s block failed`)
                             for(let i = 0; i < bind.players[challengeeIndex].influences.length; i++) { //revealed card needs to be replaced
                                 if(bind.players[challengeeIndex].influences[i] == res.revealedCard) {
                                     bind.deck.push(bind.players[challengeeIndex].influences[i]);
@@ -198,8 +202,10 @@ class CoupGame{
                             bind.updatePlayers();
                             bind.isChooseInfluenceOpen = true;
                             bind.gameSocket.to(bind.nameSocketMap[res.challenger]).emit('g-chooseInfluence');
-                            // bind.nextTurn();
+                            bind.nextTurn();
                         } else { //challenge succeeded
+                            bind.gameSocket.emit("g-addLog", `${res.challenger}'s challenge on ${res.challengee}'s block succeeded`)
+                            bind.gameSocket.emit("g-addLog", `${res.challengee} lost their ${res.revealedCard}`)
                             for(let i = 0; i < bind.players[challengeeIndex].influences.length; i++) {
                                 if(bind.players[challengeeIndex].influences[i] == res.revealedCard) {
                                     bind.deck.push(bind.players[challengeeIndex].influences[i]);
@@ -213,10 +219,13 @@ class CoupGame{
                         }
                     } else { //normal challenge
                         if(res.revealedCard == bind.actions[res.prevAction.action].influence) { // challenge failed
+                            bind.gameSocket.emit("g-addLog", `${res.challenger}'s challenge on ${res.challengee} failed`)
                             bind.isChooseInfluenceOpen = true;
                             bind.gameSocket.to(bind.nameSocketMap[res.challenger]).emit('g-chooseInfluence');
                             bind.applyAction(res.prevAction);
                         } else { // challenge succeeded
+                            bind.gameSocket.emit("g-addLog", `${res.challenger}'s challenge on ${res.challengee} succeeded`)
+                            bind.gameSocket.emit("g-addLog", `${res.challengee} lost their ${res.revealedCard}`)
                             for(let i = 0; i < bind.players[challengeeIndex].influences.length; i++) { // 
                                 if(bind.players[challengeeIndex].influences[i] == res.revealedCard) {
                                     bind.deck.push(bind.players[challengeeIndex].influences[i]);
@@ -225,7 +234,6 @@ class CoupGame{
                                     break;
                                 }
                             }
-                            bind.isRevealOpen = false;
                             bind.nextTurn();
                         }
                     }
@@ -236,6 +244,7 @@ class CoupGame{
                 // res.influence, res.playerName
                 const playerIndex = bind.nameIndexMap[res.playerName];
                 if(bind.isChooseInfluenceOpen) {
+                    bind.gameSocket.emit("g-addLog", `${res.playerName} lost their ${res.influence}`)
                     for(let i = 0; i < bind.players[playerIndex].influences.length; i++) {
                         if(bind.players[playerIndex].influences[i] == res.influence) {
                             bind.deck.push(bind.players[playerIndex].influences[i]);
@@ -322,6 +331,7 @@ class CoupGame{
     applyAction(action) {
         console.log(this.players)
         console.log(action)
+        this.gameSocket.emit("g-addLog", `${action.source} used ${action.action}`)
         const execute = action.action;
         const target = action.target;
         const source = action.source;
@@ -403,9 +413,12 @@ class CoupGame{
     }
 
     nextTurn() {
+        console.log(!this.isChallengeBlockOpen, !this.isChooseInfluenceOpen, !this.isExchangeOpen, !this.isRevealOpen)
+        if(!this.isChallengeBlockOpen && !this.isChooseInfluenceOpen && !this.isExchangeOpen && !this.isRevealOpen){
         this.players.forEach(x => {
             console.log(x.influences)
             if(x.influences.length == 0 && !x.isDead) {// player is dead
+                this.gameSocket.emit("g-addLog", `${x.name} is out!`)
                 this.aliveCount-=1;
                 x.isDead = true;
                 x.money = 0;
@@ -428,7 +441,7 @@ class CoupGame{
             } while(this.players[this.currentPlayer].isDead == true);
             this.playTurn();
         }
-        
+      }
     }
 
     playTurn() {

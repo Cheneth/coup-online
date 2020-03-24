@@ -7,6 +7,8 @@ export default class ChallengeDecision extends Component {
     // }
 
     vote = (isChallenging) => {
+        this.props.closeOtherVotes('challenge')
+
         const res = {
             action: this.props.action,
             isChallenging,

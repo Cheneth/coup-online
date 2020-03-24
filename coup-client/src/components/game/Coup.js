@@ -8,6 +8,7 @@ import BlockDecision from './BlockDecision';
 import ChooseInfluence from './ChooseInfluence';
 import ExchangeInfluences from './ExchangeInfluences';
 import './CoupStyles.css';
+import EventLog from './EventLog';
 
 export default class Coup extends Component {
 
@@ -26,7 +27,9 @@ export default class Coup extends Component {
              isChoosingInfluence: false,
              exchangeInfluence: null,
              error: '',
-             winner: ''
+             winner: '',
+             logs: [],
+             isDead: false
         }
         const bind = this;
         this.props.socket.on('g-gameOver', (winner) => {
@@ -43,6 +46,9 @@ export default class Coup extends Component {
                     break;
                 }
             }
+            if(playerIndex == null) {
+                this.setState({ isDead: true })
+            }
             console.log(playerIndex)
             bind.setState({playerIndex, players});
             
@@ -51,6 +57,13 @@ export default class Coup extends Component {
             console.log('currentPlayer: ', currentPlayer)
             bind.setState({ currentPlayer });
         });
+        this.props.socket.on('g-addLog', (log) => {
+            bind.state.logs = [...bind.state.logs, log]
+            if(bind.state.logs.length === 5){
+                bind.state.logs.shift();
+            }
+            bind.setState({logs :bind.state.logs})
+        })
         this.props.socket.on('g-chooseAction', () => {
             console.log(this.state.players, this.state.playerIndex)
         
@@ -61,6 +74,9 @@ export default class Coup extends Component {
             bind.setState({ exchangeInfluence: influences });
         })
         this.props.socket.on('g-openChallenge', (action) => {
+            if(this.state.isDead) {
+                return
+            }
             if(action.source !== bind.props.name) {
                bind.setState({ action }) 
             } else {
@@ -68,6 +84,9 @@ export default class Coup extends Component {
             }
         });
         this.props.socket.on('g-openBlockChallenge', (blockChallengeRes) => {
+            if(this.state.isDead) {
+                return
+            }
             if(blockChallengeRes.counterAction.source !== bind.props.name) {
                bind.setState({ blockChallengeRes }) 
             } else {
@@ -75,6 +94,9 @@ export default class Coup extends Component {
             }
         });
         this.props.socket.on('g-openBlock', (action) => {
+            if(this.state.isDead) {
+                return
+            }
             if(action.source !== bind.props.name) {
                 bind.setState({ blockingAction: action })
              } else {
@@ -111,9 +133,21 @@ export default class Coup extends Component {
         this.setState({ isChooseAction: false })
     }
     doneChallengeBlockingVote = () => {
-        this.setState({ action: null });
-        this.setState({ blockChallengeRes: null});
-        this.setState({ blockingAction: null });
+        this.setState({ action: null }); //challemge
+        this.setState({ blockChallengeRes: null}); //challenge a block
+        this.setState({ blockingAction: null }); //block
+    }
+    closeOtherVotes = (voteType) => {
+        if(voteType === 'challenge') {
+            this.setState({ blockChallengeRes: null}); //challenge a block
+            this.setState({ blockingAction: null }); //block
+        }else if(voteType === 'block') {
+            this.setState({ action: null }); //challemge
+            this.setState({ blockChallengeRes: null}); //challenge a block
+        }else if(voteType === 'challenge-block') {
+            this.setState({ action: null }); //challemge
+            this.setState({ blockingAction: null }); //block
+        }
     }
     doneReveal = () => {
         this.setState({ revealingRes: null });
@@ -169,7 +203,7 @@ export default class Coup extends Component {
         let pass = null
         let coins = null
         let exchangeInfluences = null
-        if(this.state.isChooseAction) {
+        if(this.state.isChooseAction && this.state.playerIndex != null) {
             actionDecision = <ActionDecision doneAction={this.doneAction} deductCoins={this.deductCoins} name={this.props.name} socket={this.props.socket} money={this.state.players[this.state.playerIndex].money} players={this.state.players.map(x => x.name).filter(x => !x.isDead || x !== this.props.name)}></ActionDecision>
         }
         if(this.state.currentPlayer) {
@@ -185,16 +219,16 @@ export default class Coup extends Component {
             pass = <button onClick={() => this.pass()}>Pass</button>
         }
         if(this.state.action != null) {
-            challengeDecision = <ChallengeDecision doneChallengeVote={this.doneChallengeBlockingVote} name={this.props.name} action={this.state.action} socket={this.props.socket} ></ChallengeDecision>
+            challengeDecision = <ChallengeDecision closeOtherVotes={this.closeOtherVotes} doneChallengeVote={this.doneChallengeBlockingVote} name={this.props.name} action={this.state.action} socket={this.props.socket} ></ChallengeDecision>
         }
         if(this.state.exchangeInfluence) {
             exchangeInfluences = <ExchangeInfluences doneExchangeInfluence={this.doneExchangeInfluence} name={this.props.name} influences={this.state.exchangeInfluence} socket={this.props.socket}></ExchangeInfluences>
         }
         if(this.state.blockChallengeRes != null) {
-            blockChallengeDecision = <BlockChallengeDecision doneBlockChallengeVote={this.doneChallengeBlockingVote} name={this.props.name} prevAction={this.state.blockChallengeRes.prevAction} counterAction={this.state.blockChallengeRes.counterAction} socket={this.props.socket} ></BlockChallengeDecision>
+            blockChallengeDecision = <BlockChallengeDecision closeOtherVotes={this.closeOtherVotes} doneBlockChallengeVote={this.doneChallengeBlockingVote} name={this.props.name} prevAction={this.state.blockChallengeRes.prevAction} counterAction={this.state.blockChallengeRes.counterAction} socket={this.props.socket} ></BlockChallengeDecision>
         }
         if(this.state.blockingAction !== null) {
-            blockDecision = <BlockDecision doneBlockVote={this.doneChallengeBlockingVote} name={this.props.name} action={this.state.blockingAction} socket={this.props.socket} ></BlockDecision>
+            blockDecision = <BlockDecision closeOtherVotes={this.closeOtherVotes} doneBlockVote={this.doneChallengeBlockingVote} name={this.props.name} action={this.state.blockingAction} socket={this.props.socket} ></BlockDecision>
         }
         if(this.state.playerIndex != null) {
             influences = this.state.players[this.state.playerIndex].influences.map(influence => {
@@ -203,7 +237,6 @@ export default class Coup extends Component {
                             <br></br>
                             <h3>{influence}</h3>
                         </div>
-                
                 })
             
             coins = <p>Coins: {this.state.players[this.state.playerIndex].money}</p>
@@ -218,11 +251,10 @@ export default class Coup extends Component {
                     <div className="CurrentPlayer">
                         {currentPlayer}
                     </div>
-                    
+                    <EventLog logs={this.state.logs}></EventLog>
                 </div>
                 <div className="InfluenceSection">
                     <p>Your Influences</p>
-                    <br></br>
                     {influences}
                 </div>
                 <PlayerBoard players={this.state.players}></PlayerBoard>

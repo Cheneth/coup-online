@@ -28,6 +28,7 @@ export default class BlockDecision extends Component {
     }
 
     block = (block, claim = null) => {
+        this.props.closeOtherVotes('block')
         // res.prevAction.action, res.prevAction.target, res.prevAction.source, res.counterAction, res.blockee, res.blocker, res.isBlocking
         let resClaim
         if(claim != null) {
@@ -67,6 +68,7 @@ export default class BlockDecision extends Component {
     }
 
     pickClaim = (block) => {
+        this.props.closeOtherVotes('block')
         this.setState({ decision: block })
         this.setState({ isPickingClaim: true })
     }

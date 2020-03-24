@@ -3,6 +3,8 @@ import React, { Component } from 'react'
 export default class BlockChallengeDecision extends Component {
 
     vote = (isChallenging) => {
+        this.props.closeOtherVotes('challenge-block')
+
         const res = {
             counterAction: this.props.counterAction,
             prevAction: this.props.prevAction,

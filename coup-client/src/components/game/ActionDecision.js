@@ -48,7 +48,11 @@ export default class ActionDecision extends Component {
     }
 
     pickingTarget = (action) => {
-        this.setState({isPickingTarget: true});
+        this.setState({
+            isPickingTarget: true,
+            targetAction: action,
+            actionError: ''
+        });
         this.setState({targetAction: action});
     }
 

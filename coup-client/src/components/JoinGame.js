@@ -3,8 +3,8 @@ import io from "socket.io-client";
 import Coup from './game/Coup';
 
 const axios = require('axios');
-const baseUrl = 'http://localhost:8000'
-// const baseUrl = 'https://60c79c5e.ngrok.io'
+// const baseUrl = 'http://localhost:8000'
+const baseUrl = 'https://rocky-stream-49978.herokuapp.com'
 
 
 export default class JoinGame extends Component {
@@ -15,6 +15,7 @@ export default class JoinGame extends Component {
         this.state = {
             name: '',
             roomCode: '',
+            players: [],
             isInRoom: false,
             isReady: false,
             isLoading: false,
@@ -60,6 +61,17 @@ export default class JoinGame extends Component {
             this.setState({ isGameStarted: true});
         })
 
+        socket.on('partyUpdate', (players) => {
+            console.log(players)
+            this.setState({ players })
+            if(players.length >= 3 && players.map(x => x.isReady).filter(x => x === true).length === players.length) { //TODO CHANGE 2 BACK TO 3
+                this.setState({ canStart: true })
+            } else {
+                this.setState({ canStart: false })
+            }
+        })
+
+
         socket.on('disconnected', function() {
             console.log("You've lost connection with the server")
         });
@@ -94,6 +106,7 @@ export default class JoinGame extends Component {
                 if(res.data.exists) {
                     //join 
                     console.log("joining")
+                    bind.setState({errorMsg: ''})
                     bind.joinParty();
                 } else {
                     //TODO  handle error
@@ -134,16 +147,17 @@ export default class JoinGame extends Component {
             error = <b>{this.state.errorMsg}</b>
         }
         if(this.state.isInRoom) {
-            joinReady = <button onClick={this.reportReady} disabled={this.state.isReady}>Ready</button>
+            joinReady = <button className="joinButton" onClick={this.reportReady} disabled={this.state.isReady}>Ready</button>
         } else {
-            joinReady = <button onClick={this.attemptJoinParty} disabled={this.state.isLoading}>Join</button>
+            joinReady = <button className="joinButton" onClick={this.attemptJoinParty} disabled={this.state.isLoading}>{this.state.isLoading ? 'Joining...': 'Join'}</button>
         }
         if(this.state.isReady) {
-            ready = <b style={{ color: 'green' }}>You are ready!</b>
+            ready = <b style={{ color: '#5FC15F' }}>You are ready!</b>
+            joinReady = null
         }
 
         return (
-            <div>
+            <div className="joinGameContainer">
                 <p>Your Name</p>
                 <input
                     type="text" value={this.state.name} disabled={this.state.isLoading}
@@ -160,6 +174,24 @@ export default class JoinGame extends Component {
                 {ready}
                 <br></br>
                 {error}
+                <div className="readyUnitContainer">
+                        {this.state.players.map((item,index) => {
+                            let ready = null
+                            let readyUnitColor = '#E46258'
+                            if(item.isReady) {
+                                ready = <b>Ready!</b>
+                                readyUnitColor = '#73C373'
+                            } else {
+                                ready = <b>Not Ready</b>
+                            }
+                            return (
+                                    <div className="readyUnit" style={{backgroundColor: readyUnitColor}} key={index}>
+                                        <p >{index+1}. {item.name} {ready}</p>
+                                    </div>
+                            )
+                            })
+                        }
+                </div>
             </div>
         )
     }

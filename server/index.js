@@ -50,7 +50,6 @@ openSocket = (gameSocket, namespace) => {
     let partyMembers = []; //actual members
     let partyLeader = ''
     let started = false;
-    let bind = this;
 
     gameSocket.on('connection', (socket) => {
         console.log('id: ' + socket.id);
@@ -77,7 +76,8 @@ openSocket = (gameSocket, namespace) => {
         // })
 
         socket.on('setName', (name) => { //when client joins, it will immediately set its name
-            if(bind.started) {
+            console.log(started)
+            if(started) {
                 gameSocket.to(players[index].socket_id).emit("joinFailed", 'game_already_started');
                 return
             }
@@ -109,7 +109,7 @@ openSocket = (gameSocket, namespace) => {
         })
 
         socket.on('startGameSignal', (players) => {
-            bind.started = true;
+            started = true;
             gameSocket.emit('startGame');
             startGame(players, gameSocket, namespace);
         })

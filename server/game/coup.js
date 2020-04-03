@@ -71,6 +71,7 @@ class CoupGame{
         this.isExchangeOpen = false; // if listening for result of ambassador exchange;
         this.votes = 0;
         this.aliveCount = 0;
+        this.isPlayAgainOpen = false;
     }
 
     resetGame(startingPlayer = 0) {
@@ -104,6 +105,14 @@ class CoupGame{
         this.players.map(x => {
             const socket = this.gameSocket.sockets[x.socketID];
             let bind = this
+            socket.on('g-playAgain', () => {
+                if(bind.isPlayAgainOpen){
+                    bind.isPlayAgainOpen = false;
+                    this.resetGame();
+                    this.updatePlayers();
+                    this.playTurn() 
+                }
+            })
             socket.on('g-deductCoins', (res) => {
                 //res.amount res.source
                 console.log('deducting ' + res.amount + ' coins from ' + res.source )
@@ -424,6 +433,7 @@ class CoupGame{
                 x.money = 0;
             }
         });
+        this.updatePlayers();
         if(this.aliveCount == 1) {
             let winner = null
             for(let i = 0; i < this.players.length; i++) {
@@ -431,10 +441,10 @@ class CoupGame{
                     winner = this.players[i].name; 
                 }
             }
+            this.isPlayAgainOpen = true;
             this.gameSocket.emit('g-gameOver', winner);
             //GAME END
         } else {
-            this.updatePlayers();
             do {
                 this.currentPlayer+=1;
                 this.currentPlayer%=this.players.length;

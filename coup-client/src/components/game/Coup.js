@@ -9,6 +9,7 @@ import ChooseInfluence from './ChooseInfluence';
 import ExchangeInfluences from './ExchangeInfluences';
 import './CoupStyles.css';
 import EventLog from './EventLog';
+import ReactModal from 'react-modal';
 
 export default class Coup extends Component {
 
@@ -16,6 +17,7 @@ export default class Coup extends Component {
         super(props)
     
         this.state = {
+             showModal: false,
              action: null,
              blockChallengeRes: null,
              players: [],
@@ -28,14 +30,26 @@ export default class Coup extends Component {
              exchangeInfluence: null,
              error: '',
              winner: '',
+             playAgain: null,
              logs: [],
              isDead: false
         }
         const bind = this;
+
+        this.playAgainButton = <>
+        <br></br>
+        <button className="startGameButton" onClick={() => {
+            this.props.socket.emit('g-playAgain');
+        }}>Play Again</button>
+        </>
+
         this.props.socket.on('g-gameOver', (winner) => {
             bind.setState({winner: `${winner} Wins!`})
+            bind.setState({playAgain: bind.playAgainButton})
         })
         this.props.socket.on('g-updatePlayers', (players) => {
+            bind.setState({playAgain: null})
+            bind.setState({winner: null})
             players = players.filter(x => !x.isDead);
             console.log(players)
             let playerIndex = null;
@@ -48,6 +62,8 @@ export default class Coup extends Component {
             }
             if(playerIndex == null) {
                 this.setState({ isDead: true })
+            }else {
+                this.setState({ isDead: false})
             }
             console.log(playerIndex)
             bind.setState({playerIndex, players});
@@ -119,6 +135,14 @@ export default class Coup extends Component {
         this.props.socket.on('g-closeBlockChallenge', () => {
             bind.setState({ blockChallengeRes: null });
         });
+    }
+
+    handleOpenModal = () => {
+        this.setState({ showModal: true });
+    }
+
+    handleCloseModal = () => {
+        this.setState({ showModal: false });
     }
 
     deductCoins = (amount) => {
@@ -203,6 +227,7 @@ export default class Coup extends Component {
         let pass = null
         let coins = null
         let exchangeInfluences = null
+        let playAgain = null
         if(this.state.isChooseAction && this.state.playerIndex != null) {
             actionDecision = <ActionDecision doneAction={this.doneAction} deductCoins={this.deductCoins} name={this.props.name} socket={this.props.socket} money={this.state.players[this.state.playerIndex].money} players={this.state.players.map(x => x.name).filter(x => !x.isDead || x !== this.props.name)}></ActionDecision>
         }
@@ -243,6 +268,46 @@ export default class Coup extends Component {
         }
         return (
             <div className="GameContainer">
+            <ReactModal 
+            isOpen={this.state.showModal}
+            contentLabel="Minimal Modal Example"
+            >
+            <button className="CloseModalButton" onClick={this.handleCloseModal}>
+                <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 21 21">
+                    <g id="more_info" data-name="more info" transform="translate(-39 -377)">
+                        <g id="Ellipse_1" data-name="Ellipse 1" class="cls-5" transform="translate(39 377)">
+                        <circle class="cls-7" cx="10.5" cy="10.5" r="10.5"/>
+                        <circle class="cls-8" cx="10.5" cy="10.5" r="10"/>
+                        </g>
+                        <text id="x" class="cls-6" transform="translate(46 391)"><tspan x="0" y="0">x</tspan></text>
+                    </g>
+                </svg>
+                </button>
+            <div className="RulesContainer">
+                <div className="RulesContent">
+                    <h2>Influences</h2>
+                    <h3>Captain</h3>
+                    <p><b id="captain-color">STEAL</b>: Steal 2 coins from a target. Blockable by <hl id="captain-color">Captain</hl> or <hl id="ambassador-color">Ambassador</hl>.</p>
+                    <h3>Assassin</h3>
+                    <p><b id="assassin-color">ASSASSINATE</b>: Pay 3 coins to choose a target to assassinate (target loses an influence). Blockable by <hl id="contessa-color">Contessa</hl>.</p>
+                    <h3>Duke</h3>
+                    <p><b id="duke-color">TAX</b>: Collect 3 coins from the treasury. Not blockable.</p>
+                    <h3>Ambassador</h3>
+                    <p><b id="ambassador-color">EXCHANGE</b>: Draw 2 influences into your hand and pick any 2 influences to put back. Not blockable.</p>
+                    <h3>Contessa</h3>
+                    <p><b id="contessa-color">BLOCK ASSASSINATION</b>: Can block assassinations. Not blockable.</p>
+                    <h3>Other Actions</h3>
+                    <p>INCOME: Collect 1 coins from the treasury</p>
+                    <p>FOREIGN AID: Collect 2 coins from the treasury. Blockable by <hl id="duke-color">Duke</hl></p>
+                    <p>COUP: Pay 7 coins and choose a target to lose an influence. Not Blockable.</p>
+                    <h1>Rules</h1>
+
+
+                    
+                </div>
+                
+            </div>
+            </ReactModal>
                 <div className="GameHeader">
                     <div className="PlayerInfo">
                         <p>You are: {this.props.name}</p>
@@ -251,6 +316,18 @@ export default class Coup extends Component {
                     <div className="CurrentPlayer">
                         {currentPlayer}
                     </div>
+                    <div className="Rules" onClick={this.handleOpenModal}>
+                        <p>Rules</p>  
+                        <svg className="InfoIcon"xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 21 22">
+                            <g id="more_info" data-name="more info" transform="translate(-39 -377)">
+                                <g id="Ellipse_1" data-name="Ellipse 1" class="cls-1" transform="translate(39 377)">
+                                <circle class="cls-3" cx="10.5" cy="10.5" r="10.5"/>
+                                <circle class="cls-4" cx="10.5" cy="10.5" r="10"/>
+                                </g>
+                                <text id="i" class="cls-2" transform="translate(48 393)"><tspan x="0" y="0">i</tspan></text>
+                            </g>
+                        </svg>
+                    </div>
                     <EventLog logs={this.state.logs}></EventLog>
                 </div>
                 <div className="InfluenceSection">
@@ -258,7 +335,6 @@ export default class Coup extends Component {
                     {influences}
                 </div>
                 <PlayerBoard players={this.state.players}></PlayerBoard>
-                <br></br>
                 <div className="DecisionsSection">
                     {revealDecision}
                     {chooseInfluenceDecision}
@@ -268,8 +344,10 @@ export default class Coup extends Component {
                     {blockChallengeDecision}
                     {blockDecision}
                     {pass}
+                    {playAgain}
                 </div>
                 <b>{this.state.winner}</b>
+                {this.state.playAgain}
             </div>
         )
     }

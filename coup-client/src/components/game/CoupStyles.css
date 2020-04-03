@@ -11,6 +11,103 @@
     padding-right: 20px;
 }
 
+.Rules {
+  cursor: pointer;
+  text-align: left;
+  position: absolute;
+  left: 10px;
+  top: 80px;
+  /* border: 2px solid #707070; */
+  border-radius: 5px;
+  line-height: 40%;
+  width: fit-content;
+  padding-left: 5px;
+  padding-right: 5px;
+  background-color: #F2F2F2;
+  display: flex;
+  align-items: center;
+}
+
+.Rules p{
+  font-size: 12px;
+  margin: 8px;
+  /* margin: 0; */
+  /* padding-bottom: 5px; */
+  margin-left: 0px;
+  margin-right: 2px;
+  display: inline-block;
+}
+
+.RulesContent h1, h3 {
+  line-height: 5px;
+}
+
+.RulesContainer {
+  overflow-y: scroll;
+  /* padding-bottom: 10px; */
+  height: 100%;
+}
+
+.RulesContent {
+  /* line-height: 12px; */
+  height: fit-content;
+  overflow-y: scroll;
+}
+
+.InfoIcon {
+  /* margin: 5 auto; */
+  /* margin-top: 5px; */
+  display: inline-block;
+}
+
+.CloseModalButton {
+  top: 10px;
+  left: 10px;
+  padding: 0;
+}
+
+.ReactModal__Content {
+  overflow-y : hidden;
+  display: relative;
+}
+
+.cls-1, .cls-4 {
+  fill: none;
+}
+
+.cls-1 {
+  stroke: #2c2c2c;
+}
+
+.cls-2 {
+  fill: #2c2c2c;
+  font-size: 16px;
+  font-family: MalayalamSangamMN, Malayalam Sangam MN;
+}
+
+.cls-3 {
+  stroke: none;
+}
+
+
+.cls-5, .cls-8 {
+  fill: none;
+}
+
+.cls-5 {
+  stroke: #707070;
+}
+
+.cls-6 {
+  fill: #767676;
+  font-size: 16px;
+  font-family: MalayalamSangamMN, Malayalam Sangam MN;
+}
+
+.cls-7 {
+  stroke: none;
+}
+
 .InfluenceSection {
     background-color: #F2F2F2;
     border-radius: 5px;
@@ -156,6 +253,21 @@
 #ambassador {
     background-color: #B4CA1F;
 }
+#captain-color {
+  color: #80C6E5;
+}
+#duke-color {
+  color: #DD6C75;
+}
+#assassin-color {
+  color: #2B2B2B;
+}
+#contessa-color {
+  color: #E35646;
+}
+#ambassador-color {
+  color: #B4CA1F;
+}
 .DecisionTitle {
     text-align: left;
     margin-left: 22px;
@@ -171,6 +283,10 @@
         position: absolute;
         right: 10VW;
         top: 5VH;
+    }
+    .Rules {
+      left: 10VW;
+      top: 17VH;
     }
     .EventLogContainer {
         text-align: right;

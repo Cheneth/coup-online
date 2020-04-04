@@ -15,7 +15,7 @@ export default class ChooseInfluence extends Component {
 
     render() {
         const influences = this.props.influences.map((x, index) => {
-            return <button key={index} onClick={() => this.selectInfluence(x)}>{x}</button>
+            return <button id={`${x}`} key={index} onClick={() => this.selectInfluence(x)}>{x}</button>
         })
         return ( 
             <div>

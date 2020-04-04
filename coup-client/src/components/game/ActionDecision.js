@@ -63,8 +63,8 @@ export default class ActionDecision extends Component {
     render() {
         let controls = null
         if(this.state.isPickingTarget) {
-            controls = this.props.players.filter(x => x !== this.props.name).map((x, index) => {
-                return <button key={index} onClick={() => this.pickTarget(x)}>{x}</button>
+            controls = this.props.players.filter(x => !x.isDead).filter(x => x.name !== this.props.name).map((x, index) => {
+                return <button style={{ backgroundColor: x.color}} key={index} onClick={() => this.pickTarget(x.name)}>{x.name}</button>
             })
         } else if(this.props.money < 10) {
            controls = ( 

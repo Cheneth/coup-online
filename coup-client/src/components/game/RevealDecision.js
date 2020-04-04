@@ -34,11 +34,11 @@ export default class RevealDecision extends Component {
 
     render() {
         const influences = this.props.influences.map((x, index) => {
-            return <button key={index} onClick={() => this.selectInfluence(x)}>{x}</button>
+            return <button id={x} key={index} onClick={() => this.selectInfluence(x)}>{x}</button>
         })
         return ( 
             <div>
-                <p>Your {this.act} has been challenged! If you don't reveal {this.actionMap[this.act].join(' or ')} you'll lose influence! </p>
+                <p>Your <b>{this.act}</b> has been challenged! If you don't reveal {this.actionMap[this.act].join(' or ')} you'll lose influence! </p>
                 {influences}
             </div>
         )

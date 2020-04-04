@@ -82,6 +82,7 @@ class CoupGame{
         this.isExchangeOpen = false;
         this.aliveCount = this.players.length;
         this.votes = 0;
+        this.deck = gameUtils.buildDeck();
         for(let i = 0; i < this.players.length; i++) {
             this.players[i].money = 2;
             this.players[i].influences = [this.deck.pop(), this.deck.pop()];

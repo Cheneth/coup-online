@@ -108,7 +108,7 @@ class CoupGame{
             socket.on('g-playAgain', () => {
                 if(bind.isPlayAgainOpen){
                     bind.isPlayAgainOpen = false;
-                    this.resetGame(Math.floor(Math.random() * (this.players.length+1)));
+                    this.resetGame(Math.floor(Math.random() * (this.players.length)));
                     this.updatePlayers();
                     this.playTurn() 
                 }

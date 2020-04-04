@@ -88,7 +88,6 @@ class CoupGame{
             this.players[i].influences = [this.deck.pop(), this.deck.pop()];
             this.players[i].isDead = false;
         }
-        // console.log(this.deck, this.players);
     }
 
     listen() {
@@ -109,7 +108,7 @@ class CoupGame{
             socket.on('g-playAgain', () => {
                 if(bind.isPlayAgainOpen){
                     bind.isPlayAgainOpen = false;
-                    this.resetGame();
+                    this.resetGame(Math.floor(Math.random() * (this.players.length+1)));
                     this.updatePlayers();
                     this.playTurn() 
                 }

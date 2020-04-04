@@ -66,6 +66,13 @@ button{
   top: 8VH;
 }
 
+.homeModalContainer {
+  margin: auto;
+  margin-top: 10px;
+  display: block;
+  width: 54px;
+}
+
 .homeContainer img{
   width: 100px;
   height: 100px;

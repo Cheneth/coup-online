@@ -82,7 +82,7 @@ openSocket = (gameSocket, namespace) => {
                 return
             }
             if(!players.map(x => x.player).includes(name)){
-                if(partyMembers.length >= 7) {
+                if(partyMembers.length >= 6) {
                     gameSocket.to(players[index].socket_id).emit("joinFailed", 'party_full');
                 } else {
                     if(partyMembers.length == 0) {

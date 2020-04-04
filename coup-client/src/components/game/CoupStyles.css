@@ -42,6 +42,10 @@
   line-height: 5px;
 }
 
+.RulesContent h3 {
+  text-decoration: underline;
+}
+
 .RulesContainer {
   overflow-y: scroll;
   /* padding-bottom: 10px; */

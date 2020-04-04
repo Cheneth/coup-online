@@ -229,7 +229,7 @@ export default class Coup extends Component {
         let exchangeInfluences = null
         let playAgain = null
         if(this.state.isChooseAction && this.state.playerIndex != null) {
-            actionDecision = <ActionDecision doneAction={this.doneAction} deductCoins={this.deductCoins} name={this.props.name} socket={this.props.socket} money={this.state.players[this.state.playerIndex].money} players={this.state.players.map(x => x.name).filter(x => !x.isDead || x !== this.props.name)}></ActionDecision>
+            actionDecision = <ActionDecision doneAction={this.doneAction} deductCoins={this.deductCoins} name={this.props.name} socket={this.props.socket} money={this.state.players[this.state.playerIndex].money} players={this.state.players}></ActionDecision>
         }
         if(this.state.currentPlayer) {
             currentPlayer = <p>It is <b>{this.state.currentPlayer}</b>'s turn</p>
@@ -256,8 +256,8 @@ export default class Coup extends Component {
             blockDecision = <BlockDecision closeOtherVotes={this.closeOtherVotes} doneBlockVote={this.doneChallengeBlockingVote} name={this.props.name} action={this.state.blockingAction} socket={this.props.socket} ></BlockDecision>
         }
         if(this.state.playerIndex != null) {
-            influences = this.state.players[this.state.playerIndex].influences.map(influence => {
-                return  <div className="InfluenceUnitContainer">
+            influences = this.state.players[this.state.playerIndex].influences.map((influence, index) => {
+                return  <div key={index} className="InfluenceUnitContainer">
                             <span className="circle" style={{backgroundColor: `${this.influenceColorMap[influence]}`}}></span>
                             <br></br>
                             <h3>{influence}</h3>
@@ -297,11 +297,23 @@ export default class Coup extends Component {
                     <h3>Contessa</h3>
                     <p><b id="contessa-color">BLOCK ASSASSINATION</b>: Can block assassinations. Not blockable.</p>
                     <h3>Other Actions</h3>
-                    <p>INCOME: Collect 1 coins from the treasury</p>
-                    <p>FOREIGN AID: Collect 2 coins from the treasury. Blockable by <hl id="duke-color">Duke</hl></p>
-                    <p>COUP: Pay 7 coins and choose a target to lose an influence. Not Blockable.</p>
-                    <h1>Rules</h1>
-
+                    <p><b>INCOME</b>: Collect 1 coins from the treasury</p>
+                    <p><b>FOREIGN AID</b>: Collect 2 coins from the treasury. Blockable by <hl id="duke-color">Duke</hl></p>
+                    <p><b>COUP</b>: Pay 7 coins and choose a target to lose an influence. If a player starts their turn with 10 coins, they must Coup. Not Blockable.</p>
+                    <h2>Rules</h2>
+                    <p>On your turn, you may choose an action to play. The action you choose may or may not correspond to the influences that you possess. 
+                        For the action that you choose, other players may potentially block or challenge it. </p>
+                    <p><b>Challenge</b>: When a player declares an action they are declaring to the rest of the players that they have a certain influence, 
+                        and any other player can challenge it. When a player is challenged, the challenged player must reveal the correct influence 
+                        associated with their action. If they reveal the correct influence, the challenger player will lose an influence. However, 
+                        if they fail to reveal the correct influence the challenged player will lose their incorrectly revealed influence.</p>
+                    <p><b>Block</b>: When the any of the actions "Foreign Aid", "Steal", and "Assasinate" are used, they can be blocked. Once again, 
+                        any player can claim to have the correct influence to block. However, blocks can also be challenged by any player. If a block 
+                        fails, the original action will take place.
+                    </p>
+                    <p>
+                        If a player loses all their influences, they are out of the game. The last player standing wins!
+                    </p>
 
                     
                 </div>

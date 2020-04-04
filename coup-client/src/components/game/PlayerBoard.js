@@ -12,8 +12,6 @@ export default function PlayerBoard(props) {
                 {/* <p>{player.influences.join(', ')}</p> */}
             </span>
         );
-    } else {
-        boardItems = <b>{props.players[0]} Wins!</b>
     }
     return (
         <div className="PlayerBoardContainer" style={{textAlign: "center"}}>

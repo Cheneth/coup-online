@@ -332,11 +332,11 @@ export default class Coup extends Component {
                         <p>Rules</p>  
                         <svg className="InfoIcon"xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 21 22">
                             <g id="more_info" data-name="more info" transform="translate(-39 -377)">
-                                <g id="Ellipse_1" data-name="Ellipse 1" class="cls-1" transform="translate(39 377)">
-                                <circle class="cls-3" cx="10.5" cy="10.5" r="10.5"/>
-                                <circle class="cls-4" cx="10.5" cy="10.5" r="10"/>
+                                <g id="Ellipse_1" data-name="Ellipse 1" className="cls-1" transform="translate(39 377)">
+                                <circle className="cls-3" cx="10.5" cy="10.5" r="10.5"/>
+                                <circle className="cls-4" cx="10.5" cy="10.5" r="10"/>
                                 </g>
-                                <text id="i" class="cls-2" transform="translate(48 393)"><tspan x="0" y="0">i</tspan></text>
+                                <text id="i" className="cls-2" transform="translate(48 393)"><tspan x="0" y="0">i</tspan></text>
                             </g>
                         </svg>
                     </div>

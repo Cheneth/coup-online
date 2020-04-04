@@ -19,8 +19,8 @@ export default class ExchangeInfluences extends Component {
         if(this.state.putBack.length === 2) {
             const res = {
                 playerName: this.props.name,
-                kept: this.state.influences,
-                putBack: this.state.putBack
+                kept: this.state.putBack,
+                putBack: this.state.influences
             }
             console.log(res);
             this.props.socket.emit('g-chooseExchangeDecision', res);
@@ -34,7 +34,7 @@ export default class ExchangeInfluences extends Component {
         })
         return ( 
             <div>
-                <p className="DecisionTitle">Choose which influences to put back</p>
+                <p className="DecisionTitle">Choose which influences to keep</p>
                 {influences}
             </div>
         )

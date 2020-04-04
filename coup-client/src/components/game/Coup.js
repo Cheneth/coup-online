@@ -316,6 +316,7 @@ export default class Coup extends Component {
             <div className="RulesContainer">
                 <div className="RulesContent">
                     <h2>Rules</h2>
+                    <p>2-6 players</p>
                     <p>On your turn, you may choose an action to play. The action you choose may or may not correspond to the influences that you possess. 
                         For the action that you choose, other players may potentially block or challenge it. </p>
                     <p><b>Challenge</b>: When a player declares an action they are declaring to the rest of the players that they have a certain influence, 
@@ -384,7 +385,7 @@ export default class Coup extends Component {
                         {currentPlayer}
                     </div>
                     <div className="Rules" onClick={this.handleOpenRulesModal}>
-                        <p>Rules</p>  
+                        <p>Rules </p>  
                         <svg className="InfoIcon"xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 21 22">
                             <g id="more_info" data-name="more info" transform="translate(-39 -377)">
                                 <g id="Ellipse_1" data-name="Ellipse 1" className="cls-1" transform="translate(39 377)">

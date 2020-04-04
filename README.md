@@ -1,6 +1,6 @@
 # Coup Online
 
-This project is an online port of the card game Coup. It is currently hosted at [here](https://glacial-scrubland-15934.herokuapp.com/).
+This project is an online port of the card game Coup. It is currently hosted at [here](http://chickenkoup.com/).
 
 Perfect to play with friends during quarantine c:
 ## About the project

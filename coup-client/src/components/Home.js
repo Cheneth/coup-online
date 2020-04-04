@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from "react-router-dom";
+import chicken from "../assets/Chicken.svg"
 
 export default class Home extends Component {
     render() {
@@ -8,6 +9,7 @@ export default class Home extends Component {
             <div className="homeContainer">
                 <h1>Welcome to Coup</h1>
                 <p>A game of deduction and deception</p>
+                <img src={chicken} alt="chicken-leg"/>
                 <div className="input-group-btn">
                     <Link className="home" to="/create" >Create Game</Link>
                 </div>

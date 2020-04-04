@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Coup Online",
+  "name": "An online port of Coup",
   "icons": [
     {
       "src": "favicon.ico",

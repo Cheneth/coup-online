@@ -30,6 +30,21 @@ button{
   cursor: pointer;
 }
 
+.website-link {
+  cursor: pointer;
+  text-decoration: none;
+  color: #000000;
+  font-weight: 600;
+  background-color: #F2F2F2;
+  border-radius: 5px;
+  padding: 5px;
+  transition-duration: 0.3s;
+}
+.website-link:hover{
+  color: #FFFFFF;
+  background-color: #2B2B2B;
+}
+
 .createGameContainer, .joinGameContainer {
   position: absolute;
   top:25VH;

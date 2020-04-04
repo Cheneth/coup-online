@@ -17,7 +17,7 @@ export default class Home extends Component {
                     <Link className="home" to="/join" >Join Game</Link>
                 </div>
             </div>
-            <p className="footer">Made by Ethan Chen</p>
+            <p className="footer">Made by <a className="website-link" href="https://cheneth.github.io/" target="_blank" rel="noopener noreferrer">Ethan Chen</a></p>
             </>
         )
     }

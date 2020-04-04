@@ -131,7 +131,7 @@
     <text id="ASSASSIN" class="cls-7" transform="translate(359 656)"><tspan x="0" y="0">ASSASSIN</tspan></text>
     <text id="ASSASSINATE" class="cls-7" transform="translate(613 656)"><tspan x="0" y="0">ASSASSINATE</tspan></text>
     <text id="_7" data-name="—————" class="cls-7" transform="translate(1211 656)"><tspan x="0" y="0">—————</tspan></text>
-    <text id="Pay_7_coins-2" data-name="Pay 7 coins" class="cls-7" transform="translate(898 648)"><tspan x="0" y="0">Pay 7 coins</tspan></text>
+    <text id="Pay_3_coins" data-name="Pay 3 coins" class="cls-7" transform="translate(898 648)"><tspan x="0" y="0">Pay 3 coins</tspan></text>
     <text id="Make_any_player_lose_influence-2" data-name="Make any player lose influence" class="cls-9" transform="translate(857 669)"><tspan x="0" y="0">Make any player lose influence</tspan></text>
   </g>
   <g id="Group_8" data-name="Group 8" transform="translate(-280 -177)">
@@ -151,7 +151,7 @@
       <rect class="cls-15" x="0.5" y="0.5" width="1135" height="81" rx="4.5"/>
     </g>
     <text id="CAPTAIN" class="cls-7" transform="translate(367 885)"><tspan x="0" y="0">CAPTAIN</tspan></text>
-    <text id="TAX-2" data-name="TAX" class="cls-7" transform="translate(685 885)"><tspan x="0" y="0">TAX</tspan></text>
+    <text id="STEAL" class="cls-7" transform="translate(670 884)"><tspan x="0" y="0">STEAL</tspan></text>
     <text id="Block_Stealing-2" data-name="Block Stealing" class="cls-7" transform="translate(1202 884)"><tspan x="0" y="0">Block Stealing</tspan></text>
     <text id="Draw_2_coins_from" data-name="Draw 2 coins from" class="cls-11" transform="translate(877 866)"><tspan x="0" y="0">Draw 2 coins from</tspan></text>
     <text id="another_player" data-name="another player" class="cls-11" transform="translate(897 895)"><tspan x="0" y="0">another player</tspan></text>

@@ -119,6 +119,8 @@ openSocket = (gameSocket, namespace) => {
             players.map((x,index) => {
                 if(x.socket_id == socket.id) {
                     gameSocket.emit('g-addLog', `${JSON.stringify(players[index].player)} has disconnected`);
+                    gameSocket.emit('g-addLog', 'Please recreate the game.');
+                    gameSocket.emit('g-addLog', 'Sorry for the inconvenience (シ_ _)シ');
                     players[index].player ='';
                     if(socket.id === partyLeader) {
                         console.log('Leader has disconnected');

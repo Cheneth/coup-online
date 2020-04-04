@@ -4,8 +4,8 @@ import { ReactSortable } from "react-sortablejs";
 import Coup from './game/Coup';
 
 const axios = require('axios');
-// const baseUrl = 'http://localhost:8000' 
-const baseUrl = 'https://rocky-stream-49978.herokuapp.com'
+const baseUrl = 'http://localhost:8000' 
+// const baseUrl = 'https://rocky-stream-49978.herokuapp.com'
 
 export default class CreateGame extends Component {
 
@@ -123,6 +123,7 @@ export default class CreateGame extends Component {
         let roomCode = null;
         let startGame = null;
         let createButton = null;
+        let youCanSort = null;
         if(!this.state.isInRoom) {
             createButton = <>
             <button className="createButton" onClick={this.createParty} disabled={this.state.isLoading}>{this.state.isLoading ? 'Creating...': 'Create'}</button>
@@ -133,8 +134,9 @@ export default class CreateGame extends Component {
             error = <b>{this.state.errorMsg}</b>
         }
         if(this.state.roomCode !== '' && !this.state.isLoading) {
+            youCanSort = <p>You can drag to re-arrange the players in a specific turn order!</p>
             roomCode = <div>
-                    <p>ROOM CODE: <br></br> <br></br><b className="RoomCode" onClick={this.copyCode}>{this.state.roomCode} <span class="iconify" data-icon="typcn-clipboard" data-inline="true"></span></b></p>
+                    <p>ROOM CODE: <br></br> <br></br><b className="RoomCode" onClick={this.copyCode}>{this.state.roomCode} <span className="iconify" data-icon="typcn-clipboard" data-inline="true"></span></b></p>
                     {this.state.copied ? <p>Copied to clipboard</p> : null}
                 </div>
         }
@@ -146,13 +148,28 @@ export default class CreateGame extends Component {
                 <p>Please enter your name</p>
                 <input
                     type="text" value={this.state.name} disabled={this.state.isLoading || this.state.isInRoom}
-                    onChange={e => this.onNameChange(e.target.value)}
+                    onChange={e => {
+                        if(e.target.value.length <= 10){
+                            this.setState({
+                                errorMsg: '',
+                                isError: false
+                            })
+                            this.onNameChange(e.target.value);
+                        } else {
+                            this.setState({
+                                errorMsg: 'Name must be less than 11 characters',
+                                isError: true
+                            })
+                        }
+                        
+                    }}
                 />
                 <br></br>
                 {createButton}
                 {error}
                 <br></br>
                 {roomCode}
+                {youCanSort}
                 <div className="readyUnitContainer">
                     <ReactSortable list={this.state.players} setList={newState => this.setState({ players: newState })}>
                         {this.state.players.map((item,index) => {

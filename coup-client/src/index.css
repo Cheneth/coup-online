@@ -33,21 +33,29 @@ button{
 .createGameContainer, .joinGameContainer {
   position: absolute;
   top:25VH;
-  width: 100%;
+  margin-left: 12%;
+  width: 76%;
 }
 
 .footer{
   position: absolute;
   width: 90VW;
   margin-left: 5VW;
-  bottom: 5px;
+  bottom: 20px;
 }
 
 .homeContainer{
   position: absolute;
   width: 90VW;
   margin-left: 5VW;
-  top: 20VH;
+  top: 8VH;
+}
+
+.homeContainer img{
+  width: 100px;
+  height: 100px;
+  margin-top: 40px;
+  margin-bottom: 40px;
 }
 
 .home{

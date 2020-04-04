@@ -3,8 +3,8 @@ import io from "socket.io-client";
 import Coup from './game/Coup';
 
 const axios = require('axios');
-// const baseUrl = 'http://localhost:8000'
-const baseUrl = 'https://rocky-stream-49978.herokuapp.com'
+const baseUrl = 'http://localhost:8000'
+// const baseUrl = 'https://rocky-stream-49978.herokuapp.com'
 
 
 export default class JoinGame extends Component {
@@ -161,7 +161,20 @@ export default class JoinGame extends Component {
                 <p>Your Name</p>
                 <input
                     type="text" value={this.state.name} disabled={this.state.isLoading}
-                    onChange={e => this.onNameChange(e.target.value)}
+                    onChange={e => {
+                        if(e.target.value.length <= 8){
+                            this.setState({
+                                errorMsg: '',
+                                isError: false
+                            })
+                            this.onNameChange(e.target.value);
+                        } else {
+                            this.setState({
+                                errorMsg: 'Name must be less than 9 characters',
+                                isError: true
+                            })
+                        }
+                    }}
                 />
                 <p>Room Code</p>
                 <input

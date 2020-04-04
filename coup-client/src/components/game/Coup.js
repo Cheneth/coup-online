@@ -10,6 +10,7 @@ import ExchangeInfluences from './ExchangeInfluences';
 import './CoupStyles.css';
 import EventLog from './EventLog';
 import ReactModal from 'react-modal';
+import CheatSheet from '../../assets/CheatSheet.svg'
 
 export default class Coup extends Component {
 
@@ -17,7 +18,8 @@ export default class Coup extends Component {
         super(props)
     
         this.state = {
-             showModal: false,
+             showRulesModal: false,
+             showCheatSheetModal: false,
              action: null,
              blockChallengeRes: null,
              players: [],
@@ -32,7 +34,8 @@ export default class Coup extends Component {
              winner: '',
              playAgain: null,
              logs: [],
-             isDead: false
+             isDead: false,
+             waiting: true
         }
         const bind = this;
 
@@ -137,12 +140,20 @@ export default class Coup extends Component {
         });
     }
 
-    handleOpenModal = () => {
-        this.setState({ showModal: true });
+    handleOpenRulesModal = () => {
+        this.setState({ showRulesModal: true });
     }
 
-    handleCloseModal = () => {
-        this.setState({ showModal: false });
+    handleCloseRulesModal = () => {
+        this.setState({ showRulesModal: false });
+    }
+
+    handleOpenCheatSheetModal = () => {
+        this.setState({ showCheatSheetModal: true });
+    }
+
+    handleCloseCheatSheetModal = () => {
+        this.setState({ showCheatSheetModal: false });
     }
 
     deductCoins = (amount) => {
@@ -154,7 +165,9 @@ export default class Coup extends Component {
     }
 
     doneAction = () => {
-        this.setState({ isChooseAction: false })
+        this.setState({ 
+            isChooseAction: false
+        })
     }
     doneChallengeBlockingVote = () => {
         this.setState({ action: null }); //challemge
@@ -208,7 +221,7 @@ export default class Coup extends Component {
     }
 
     influenceColorMap = {
-        duke: '#DD6C75',
+        duke: '#D55DC7',
         captain: '#80C6E5',
         assassin: '#2B2B2B',
         contessa: '#E35646',
@@ -228,31 +241,40 @@ export default class Coup extends Component {
         let coins = null
         let exchangeInfluences = null
         let playAgain = null
+        let isWaiting = true
+        let waiting = null
         if(this.state.isChooseAction && this.state.playerIndex != null) {
+            isWaiting = false;
             actionDecision = <ActionDecision doneAction={this.doneAction} deductCoins={this.deductCoins} name={this.props.name} socket={this.props.socket} money={this.state.players[this.state.playerIndex].money} players={this.state.players}></ActionDecision>
         }
         if(this.state.currentPlayer) {
             currentPlayer = <p>It is <b>{this.state.currentPlayer}</b>'s turn</p>
         }
         if(this.state.revealingRes) {
+            isWaiting = false;
             revealDecision = <RevealDecision doneReveal={this.doneReveal} name ={this.props.name} socket={this.props.socket} res={this.state.revealingRes} influences={this.state.players.filter(x => x.name === this.props.name)[0].influences}></RevealDecision>
         }
         if(this.state.isChoosingInfluence) {
+            isWaiting = false;
             chooseInfluenceDecision = <ChooseInfluence doneChooseInfluence={this.doneChooseInfluence} name ={this.props.name} socket={this.props.socket} influences={this.state.players.filter(x => x.name === this.props.name)[0].influences}></ChooseInfluence>
         }
         if(this.state.action != null || this.state.blockChallengeRes != null || this.state.blockingAction !== null){
             pass = <button onClick={() => this.pass()}>Pass</button>
         }
         if(this.state.action != null) {
+            isWaiting = false;
             challengeDecision = <ChallengeDecision closeOtherVotes={this.closeOtherVotes} doneChallengeVote={this.doneChallengeBlockingVote} name={this.props.name} action={this.state.action} socket={this.props.socket} ></ChallengeDecision>
         }
         if(this.state.exchangeInfluence) {
+            isWaiting = false;
             exchangeInfluences = <ExchangeInfluences doneExchangeInfluence={this.doneExchangeInfluence} name={this.props.name} influences={this.state.exchangeInfluence} socket={this.props.socket}></ExchangeInfluences>
         }
         if(this.state.blockChallengeRes != null) {
+            isWaiting = false;
             blockChallengeDecision = <BlockChallengeDecision closeOtherVotes={this.closeOtherVotes} doneBlockChallengeVote={this.doneChallengeBlockingVote} name={this.props.name} prevAction={this.state.blockChallengeRes.prevAction} counterAction={this.state.blockChallengeRes.counterAction} socket={this.props.socket} ></BlockChallengeDecision>
         }
         if(this.state.blockingAction !== null) {
+            isWaiting = false;
             blockDecision = <BlockDecision closeOtherVotes={this.closeOtherVotes} doneBlockVote={this.doneChallengeBlockingVote} name={this.props.name} action={this.state.blockingAction} socket={this.props.socket} ></BlockDecision>
         }
         if(this.state.playerIndex != null) {
@@ -266,16 +288,19 @@ export default class Coup extends Component {
             
             coins = <p>Coins: {this.state.players[this.state.playerIndex].money}</p>
         }
+        if(isWaiting) {
+            waiting = <p>Waiting for other players...</p>
+        }
         return (
             <div className="GameContainer">
             <ReactModal 
-            isOpen={this.state.showModal}
+            isOpen={this.state.showRulesModal}
             contentLabel="Minimal Modal Example"
-            onRequestClose={this.handleCloseModal}
+            onRequestClose={this.handleCloseRulesModal}
             shouldCloseOnOverlayClick={true}
             >
             <div className="CloseModalButtonContainer">
-                <button className="CloseModalButton" onClick={this.handleCloseModal}>
+                <button className="CloseModalButton" onClick={this.handleCloseRulesModal}>
                     <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 21 21">
                         <g id="more_info" data-name="more info" transform="translate(-39 -377)">
                             <g id="Ellipse_1" data-name="Ellipse 1" class="cls-5" transform="translate(39 377)">
@@ -319,10 +344,32 @@ export default class Coup extends Component {
                     <p>
                         If a player loses all their influences, they are out of the game. The last player standing wins!
                     </p>
-
-                    
                 </div>
-                
+            </div>
+            </ReactModal>
+            <ReactModal 
+            isOpen={this.state.showCheatSheetModal}
+            contentLabel="Minimal Modal Example"
+            onRequestClose={this.handleCloseCheatSheetModal}
+            shouldCloseOnOverlayClick={true}
+            className="CheatSheetModal"
+            >
+            <div className="CloseModalButtonContainer">
+                <button className="CloseModalButton" onClick={this.handleCloseCheatSheetModal}>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 21 21">
+                        <g id="more_info" data-name="more info" transform="translate(-39 -377)">
+                            <g id="Ellipse_1" data-name="Ellipse 1" class="cls-5" transform="translate(39 377)">
+                            <circle class="cls-7" cx="10.5" cy="10.5" r="10.5"/>
+                            <circle class="cls-8" cx="10.5" cy="10.5" r="10"/>
+                            </g>
+                            <text id="x" class="cls-6" transform="translate(46 391)"><tspan x="0" y="0">x</tspan></text>
+                        </g>
+                    </svg>
+                </button>
+            </div>
+           
+            <div className="CheatSheetContainer">
+                <img src={CheatSheet} alt="Cheat-Sheet"/>
             </div>
             </ReactModal>
                 <div className="GameHeader">
@@ -333,8 +380,20 @@ export default class Coup extends Component {
                     <div className="CurrentPlayer">
                         {currentPlayer}
                     </div>
-                    <div className="Rules" onClick={this.handleOpenModal}>
+                    <div className="Rules" onClick={this.handleOpenRulesModal}>
                         <p>Rules</p>  
+                        <svg className="InfoIcon"xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 21 22">
+                            <g id="more_info" data-name="more info" transform="translate(-39 -377)">
+                                <g id="Ellipse_1" data-name="Ellipse 1" className="cls-1" transform="translate(39 377)">
+                                <circle className="cls-3" cx="10.5" cy="10.5" r="10.5"/>
+                                <circle className="cls-4" cx="10.5" cy="10.5" r="10"/>
+                                </g>
+                                <text id="i" className="cls-2" transform="translate(48 393)"><tspan x="0" y="0">i</tspan></text>
+                            </g>
+                        </svg>
+                    </div>
+                    <div className="CheatSheet" onClick={this.handleOpenCheatSheetModal}>
+                        <p>Cheat Sheet</p>  
                         <svg className="InfoIcon"xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 21 22">
                             <g id="more_info" data-name="more info" transform="translate(-39 -377)">
                                 <g id="Ellipse_1" data-name="Ellipse 1" className="cls-1" transform="translate(39 377)">
@@ -353,6 +412,7 @@ export default class Coup extends Component {
                 </div>
                 <PlayerBoard players={this.state.players}></PlayerBoard>
                 <div className="DecisionsSection">
+                    {waiting}
                     {revealDecision}
                     {chooseInfluenceDecision}
                     {actionDecision}

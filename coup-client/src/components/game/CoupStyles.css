@@ -11,7 +11,7 @@
     padding-right: 20px;
 }
 
-.Rules {
+.Rules, .CheatSheet {
   cursor: pointer;
   text-align: left;
   position: absolute;
@@ -28,7 +28,29 @@
   align-items: center;
 }
 
-.Rules p{
+.CheatSheet {
+  top: 110px;
+}
+
+.CheatSheetModal {
+  outline: none;
+  position: absolute;
+  top: 100px;
+  left: 5px;
+  right: 5px;
+  padding-top: 10px;
+  padding-left: 5px;
+  padding-right:5px;
+  background-color: #FFFFFF;
+}
+
+.CheatSheetContainer img {
+    margin-top: 5px;
+    width: 100%;
+    height: auto;
+}
+
+.Rules p, .CheatSheet p{
   font-size: 12px;
   margin: 8px;
   /* margin: 0; */
@@ -76,11 +98,8 @@
   top: 10px;
   left: 10px;
   padding: 0;
-}
-
-.ReactModal__Content {
-  /* overflow-y : hidden; */
-  /* display: relative; */
+  background-color: #FFFFFF;
+  border: 0px;
 }
 
 .cls-1, .cls-4 {
@@ -254,7 +273,7 @@
     background-color: #80C6E5;
 }
 #duke {
-    background-color: #DD6C75;
+    background-color: #D55DC7;
 }
 #assassin {
     background-color: #2B2B2B;
@@ -269,7 +288,7 @@
   color: #80C6E5;
 }
 #duke-color {
-  color: #DD6C75;
+  color: #D55DC7;
 }
 #assassin-color {
   color: #2B2B2B;
@@ -286,6 +305,12 @@
 }
 
 @media only screen and (min-width: 1024px) {
+    .ReactModal__Content {
+      width: 60%;
+      margin-left: 20%;
+      padding-left: 0px;
+      padding-right: 0px;
+    }
     .PlayerInfo {
       left: 10VW;
       top: 5VH;
@@ -296,9 +321,20 @@
         right: 10VW;
         top: 5VH;
     }
-    .Rules {
+    .Rules{
       left: 10VW;
       top: 17VH;
+    }
+    .CheatSheet{
+      left: 10VW;
+      top: 22VH;
+    }
+    .CheatSheetModal {
+      position: absolute;
+      top: 40px;
+      left: 40px;
+      right: 40px;
+      background-color: #FFFFFF;
     }
     .EventLogContainer {
         text-align: right;

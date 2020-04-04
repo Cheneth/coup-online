@@ -271,18 +271,23 @@ export default class Coup extends Component {
             <ReactModal 
             isOpen={this.state.showModal}
             contentLabel="Minimal Modal Example"
+            onRequestClose={this.handleCloseModal}
+            shouldCloseOnOverlayClick={true}
             >
-            <button className="CloseModalButton" onClick={this.handleCloseModal}>
-                <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 21 21">
-                    <g id="more_info" data-name="more info" transform="translate(-39 -377)">
-                        <g id="Ellipse_1" data-name="Ellipse 1" class="cls-5" transform="translate(39 377)">
-                        <circle class="cls-7" cx="10.5" cy="10.5" r="10.5"/>
-                        <circle class="cls-8" cx="10.5" cy="10.5" r="10"/>
+            <div className="CloseModalButtonContainer">
+                <button className="CloseModalButton" onClick={this.handleCloseModal}>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 21 21">
+                        <g id="more_info" data-name="more info" transform="translate(-39 -377)">
+                            <g id="Ellipse_1" data-name="Ellipse 1" class="cls-5" transform="translate(39 377)">
+                            <circle class="cls-7" cx="10.5" cy="10.5" r="10.5"/>
+                            <circle class="cls-8" cx="10.5" cy="10.5" r="10"/>
+                            </g>
+                            <text id="x" class="cls-6" transform="translate(46 391)"><tspan x="0" y="0">x</tspan></text>
                         </g>
-                        <text id="x" class="cls-6" transform="translate(46 391)"><tspan x="0" y="0">x</tspan></text>
-                    </g>
-                </svg>
+                    </svg>
                 </button>
+            </div>
+           
             <div className="RulesContainer">
                 <div className="RulesContent">
                     <h2>Influences</h2>

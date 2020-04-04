@@ -3,8 +3,7 @@ import io from "socket.io-client";
 import Coup from './game/Coup';
 
 const axios = require('axios');
-// const baseUrl = 'http://localhost:8000'
-const baseUrl = 'https://rocky-stream-49978.herokuapp.com'
+const baseUrl = 'http://localhost:8000'
 
 
 export default class JoinGame extends Component {

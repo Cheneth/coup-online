@@ -1,0 +1,169 @@
+<svg id="Group_12" data-name="Group 12" xmlns="http://www.w3.org/2000/svg" width="1207" height="811" viewBox="0 0 1207 811">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #e8e8e8;
+      }
+
+      .cls-1, .cls-10, .cls-12, .cls-2, .cls-6, .cls-8 {
+        stroke: #707070;
+      }
+
+      .cls-2 {
+        fill: #f0f0f0;
+      }
+
+      .cls-16, .cls-3, .cls-4, .cls-5 {
+        fill: #707070;
+      }
+
+      .cls-3 {
+        font-size: 50px;
+      }
+
+      .cls-11, .cls-3, .cls-4, .cls-5, .cls-7, .cls-9 {
+        font-family: HelveticaNeue, Helvetica Neue;
+      }
+
+      .cls-4, .cls-7 {
+        font-size: 30px;
+      }
+
+      .cls-5, .cls-9 {
+        font-size: 18px;
+      }
+
+      .cls-6 {
+        fill: #ce84c5;
+      }
+
+      .cls-11, .cls-7, .cls-9 {
+        fill: #fff;
+      }
+
+      .cls-8 {
+        fill: #2b2b2b;
+      }
+
+      .cls-10 {
+        fill: #bccc4f;
+      }
+
+      .cls-11 {
+        font-size: 25px;
+      }
+
+      .cls-12 {
+        fill: #80c6e5;
+      }
+
+      .cls-13 {
+        fill: #e35646;
+      }
+
+      .cls-14, .cls-16 {
+        stroke: none;
+      }
+
+      .cls-15 {
+        fill: none;
+      }
+    </style>
+  </defs>
+  <g id="Rectangle_9" data-name="Rectangle 9" class="cls-1">
+    <rect class="cls-14" width="1207" height="811" rx="5"/>
+    <rect class="cls-15" x="0.5" y="0.5" width="1206" height="810" rx="4.5"/>
+  </g>
+  <g id="Rectangle_3" data-name="Rectangle 3" class="cls-2" transform="translate(32 272)">
+    <rect class="cls-14" width="1136" height="82" rx="5"/>
+    <rect class="cls-15" x="0.5" y="0.5" width="1135" height="81" rx="4.5"/>
+  </g>
+  <g id="Group_1" data-name="Group 1" transform="translate(-284 -158)">
+    <text id="Influences" class="cls-3" transform="translate(316 213)"><tspan x="0" y="0">Influences</tspan></text>
+    <text id="Action" class="cls-3" transform="translate(640 213)"><tspan x="0" y="0">Action</tspan></text>
+    <text id="Effect" class="cls-3" transform="translate(910 213)"><tspan x="0" y="0">Effect</tspan></text>
+    <text id="Counteraction" class="cls-3" transform="translate(1135 213)"><tspan x="0" y="0">Counteraction</tspan></text>
+  </g>
+  <g id="Group_2" data-name="Group 2" transform="translate(-284 -158)">
+    <g id="Rectangle_1" data-name="Rectangle 1" class="cls-2" transform="translate(316 256)">
+      <rect class="cls-14" width="1136" height="82" rx="5"/>
+      <rect class="cls-15" x="0.5" y="0.5" width="1135" height="81" rx="4.5"/>
+    </g>
+    <text id="_" data-name="—————" class="cls-4" transform="translate(359 305)"><tspan x="0" y="0">—————</tspan></text>
+    <text id="Income" class="cls-4" transform="translate(663 305)"><tspan x="0" y="0">Income</tspan></text>
+    <text id="Collect_1_coin" data-name="Collect 1 coin" class="cls-4" transform="translate(886 305)"><tspan x="0" y="0">Collect 1 coin</tspan></text>
+    <text id="_2" data-name="—————" class="cls-4" transform="translate(1212 305)"><tspan x="0" y="0">—————</tspan></text>
+  </g>
+  <g id="Group_3" data-name="Group 3" transform="translate(-284 -158)">
+    <g id="Rectangle_2" data-name="Rectangle 2" class="cls-2" transform="translate(316 343)">
+      <rect class="cls-14" width="1136" height="82" rx="5"/>
+      <rect class="cls-15" x="0.5" y="0.5" width="1135" height="81" rx="4.5"/>
+    </g>
+    <text id="_3" data-name="—————" class="cls-4" transform="translate(359 392)"><tspan x="0" y="0">—————</tspan></text>
+    <text id="Foreign_Aid" data-name="Foreign Aid" class="cls-4" transform="translate(638 392)"><tspan x="0" y="0">Foreign Aid</tspan></text>
+    <text id="Collect_2_coins" data-name="Collect 2 coins" class="cls-4" transform="translate(875 392)"><tspan x="0" y="0">Collect 2 coins</tspan></text>
+    <text id="_4" data-name="—————" class="cls-4" transform="translate(1212 392)"><tspan x="0" y="0">—————</tspan></text>
+  </g>
+  <g id="Group_11" data-name="Group 11" transform="translate(-284 -158)">
+    <g id="Group_4" data-name="Group 4">
+      <text id="_5" data-name="—————" class="cls-4" transform="translate(359 479)"><tspan x="0" y="0">—————</tspan></text>
+      <text id="Coup" class="cls-4" transform="translate(677 479)"><tspan x="0" y="0">Coup</tspan></text>
+      <text id="Pay_7_coins" data-name="Pay 7 coins" class="cls-4" transform="translate(898 471)"><tspan x="0" y="0">Pay 7 coins</tspan></text>
+      <text id="_6" data-name="—————" class="cls-4" transform="translate(1212 479)"><tspan x="0" y="0">—————</tspan></text>
+    </g>
+    <text id="Make_any_player_lose_influence" data-name="Make any player lose influence" class="cls-5" transform="translate(857 492)"><tspan x="0" y="0">Make any player lose influence</tspan></text>
+  </g>
+  <g id="Group_5" data-name="Group 5" transform="translate(-280 -158)">
+    <g id="Rectangle_4" data-name="Rectangle 4" class="cls-6" transform="translate(312 517)">
+      <rect class="cls-14" width="1136" height="82" rx="5"/>
+      <rect class="cls-15" x="0.5" y="0.5" width="1135" height="81" rx="4.5"/>
+    </g>
+    <text id="DUKE" class="cls-7" transform="translate(391 569)"><tspan x="0" y="0">DUKE</tspan></text>
+    <text id="TAX" class="cls-7" transform="translate(686 569)"><tspan x="0" y="0">TAX</tspan></text>
+    <text id="Collect_3_coins" data-name="Collect 3 coins" class="cls-7" transform="translate(879 569)"><tspan x="0" y="0">Collect 3 coins</tspan></text>
+    <text id="Block_Foreign_Aid" data-name="Block Foreign Aid" class="cls-7" transform="translate(1169 566)"><tspan x="0" y="0">Block Foreign Aid</tspan></text>
+  </g>
+  <g id="Group_6" data-name="Group 6" transform="translate(-284 -158)">
+    <g id="Rectangle_5" data-name="Rectangle 5" class="cls-8" transform="translate(316 604)">
+      <rect class="cls-14" width="1136" height="82" rx="5"/>
+      <rect class="cls-15" x="0.5" y="0.5" width="1135" height="81" rx="4.5"/>
+    </g>
+    <text id="ASSASSIN" class="cls-7" transform="translate(359 656)"><tspan x="0" y="0">ASSASSIN</tspan></text>
+    <text id="ASSASSINATE" class="cls-7" transform="translate(613 656)"><tspan x="0" y="0">ASSASSINATE</tspan></text>
+    <text id="_7" data-name="—————" class="cls-7" transform="translate(1211 656)"><tspan x="0" y="0">—————</tspan></text>
+    <text id="Pay_7_coins-2" data-name="Pay 7 coins" class="cls-7" transform="translate(898 648)"><tspan x="0" y="0">Pay 7 coins</tspan></text>
+    <text id="Make_any_player_lose_influence-2" data-name="Make any player lose influence" class="cls-9" transform="translate(857 669)"><tspan x="0" y="0">Make any player lose influence</tspan></text>
+  </g>
+  <g id="Group_8" data-name="Group 8" transform="translate(-280 -177)">
+    <g id="Rectangle_6" data-name="Rectangle 6" class="cls-10" transform="translate(312 710)">
+      <rect class="cls-14" width="1136" height="82" rx="5"/>
+      <rect class="cls-15" x="0.5" y="0.5" width="1135" height="81" rx="4.5"/>
+    </g>
+    <text id="AMBASSADOR" class="cls-7" transform="translate(329 762)"><tspan x="0" y="0">AMBASSADOR</tspan></text>
+    <text id="EXCHANGE" class="cls-7" transform="translate(630 762)"><tspan x="0" y="0">EXCHANGE</tspan></text>
+    <text id="Block_Stealing" data-name="Block Stealing" class="cls-7" transform="translate(1197 762)"><tspan x="0" y="0">Block Stealing</tspan></text>
+    <text id="Draw_2_influences" data-name="Draw 2 influences" class="cls-11" transform="translate(877 749)"><tspan x="0" y="0">Draw 2 influences</tspan></text>
+    <text id="and_put_2_back" data-name="and put 2 back" class="cls-11" transform="translate(893 778)"><tspan x="0" y="0">and put 2 back</tspan></text>
+  </g>
+  <g id="Group_9" data-name="Group 9" transform="translate(-286 -211)">
+    <g id="Rectangle_8" data-name="Rectangle 8" class="cls-12" transform="translate(318 831)">
+      <rect class="cls-14" width="1136" height="82" rx="5"/>
+      <rect class="cls-15" x="0.5" y="0.5" width="1135" height="81" rx="4.5"/>
+    </g>
+    <text id="CAPTAIN" class="cls-7" transform="translate(367 885)"><tspan x="0" y="0">CAPTAIN</tspan></text>
+    <text id="TAX-2" data-name="TAX" class="cls-7" transform="translate(685 885)"><tspan x="0" y="0">TAX</tspan></text>
+    <text id="Block_Stealing-2" data-name="Block Stealing" class="cls-7" transform="translate(1202 884)"><tspan x="0" y="0">Block Stealing</tspan></text>
+    <text id="Draw_2_coins_from" data-name="Draw 2 coins from" class="cls-11" transform="translate(877 866)"><tspan x="0" y="0">Draw 2 coins from</tspan></text>
+    <text id="another_player" data-name="another player" class="cls-11" transform="translate(897 895)"><tspan x="0" y="0">another player</tspan></text>
+  </g>
+  <g id="Group_10" data-name="Group 10" transform="translate(-286 -214)">
+    <g id="Path_1" data-name="Path 1" class="cls-13" transform="translate(318 921)">
+      <path class="cls-14" d="M 1131 81.5 L 5 81.5 C 2.518714189529419 81.5 0.5 79.48128509521484 0.5 77 L 0.5 5 C 0.5 2.518714189529419 2.518714189529419 0.5 5 0.5 L 1131 0.5 C 1133.481323242188 0.5 1135.5 2.518714189529419 1135.5 5 L 1135.5 77 C 1135.5 79.48128509521484 1133.481323242188 81.5 1131 81.5 Z"/>
+      <path class="cls-16" d="M 5 1 C 2.79443359375 1 1 2.794425964355469 1 5 L 1 77 C 1 79.20557403564453 2.79443359375 81 5 81 L 1131 81 C 1133.20556640625 81 1135 79.20557403564453 1135 77 L 1135 5 C 1135 2.794425964355469 1133.20556640625 1 1131 1 L 5 1 M 5 0 L 1131 0 C 1133.761474609375 0 1136 2.238571166992188 1136 5 L 1136 77 C 1136 79.76142883300781 1133.761474609375 82 1131 82 L 5 82 C 2.238525390625 82 0 79.76142883300781 0 77 L 0 5 C 0 2.238571166992188 2.238525390625 0 5 0 Z"/>
+    </g>
+    <text id="CONTESSA" class="cls-7" transform="translate(349 973)"><tspan x="0" y="0">CONTESSA</tspan></text>
+    <text id="Block_Assassination" data-name="Block Assassination" class="cls-7" transform="translate(1163 973)"><tspan x="0" y="0">Block Assassination</tspan></text>
+    <text id="_8" data-name="—————" class="cls-7" transform="translate(637 973)"><tspan x="0" y="0">—————</tspan></text>
+    <text id="_9" data-name="—————" class="cls-7" transform="translate(905 973)"><tspan x="0" y="0">—————</tspan></text>
+  </g>
+</svg>

@@ -1,6 +1,8 @@
 # Coup Online
 
 This project is an online port of the card game Coup. It is currently hosted at [here](https://glacial-scrubland-15934.herokuapp.com/).
+
+Perfect to play with friends during quarantine c:
 ## About the project
 This project consists of two parts
 1. The React.js client

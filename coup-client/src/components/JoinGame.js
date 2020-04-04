@@ -3,8 +3,7 @@ import io from "socket.io-client";
 import Coup from './game/Coup';
 
 const axios = require('axios');
-const baseUrl = 'http://localhost:8000'
-
+const baseUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000' 
 
 export default class JoinGame extends Component {
 

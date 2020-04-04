@@ -47,7 +47,7 @@ button{
 
 .createGameContainer, .joinGameContainer {
   position: absolute;
-  top:25VH;
+  top:20VH;
   margin-left: 12%;
   width: 76%;
 }

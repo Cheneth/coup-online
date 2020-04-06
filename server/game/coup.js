@@ -229,6 +229,16 @@ class CoupGame{
                     } else { //normal challenge
                         if(res.revealedCard == bind.actions[res.prevAction.action].influence) { // challenge failed
                             bind.gameSocket.emit("g-addLog", `${res.challenger}'s challenge on ${res.challengee} failed`)
+                            for(let i = 0; i < bind.players[challengeeIndex].influences.length; i++) { //revealed card needs to be replaced
+                                if(bind.players[challengeeIndex].influences[i] == res.revealedCard) {
+                                    bind.deck.push(bind.players[challengeeIndex].influences[i]);
+                                    bind.deck = gameUtils.shuffleDeck(bind.deck);
+                                    bind.players[challengeeIndex].influences.splice(i,1);
+                                    bind.players[challengeeIndex].influences.push(bind.deck.pop());
+                                    break;
+                                }
+                            }
+                            bind.updatePlayers();
                             bind.isChooseInfluenceOpen = true;
                             bind.gameSocket.to(bind.nameSocketMap[res.challenger]).emit('g-chooseInfluence');
                             bind.applyAction(res.prevAction);
@@ -470,7 +480,6 @@ class CoupGame{
         this.updatePlayers();
         console.log('Game has started');
         this.playTurn()
-        
         //deal cards to each player
     }
     

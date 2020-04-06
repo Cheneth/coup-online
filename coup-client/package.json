@@ -8,6 +8,7 @@
     "@testing-library/user-event": "^7.2.1",
     "axios": "^0.19.2",
     "faker": "^4.1.0",
+    "openssl": "^1.1.0",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-ga": "^2.7.0",
@@ -18,7 +19,7 @@
     "socket.io-client": "^2.3.0"
   },
   "scripts": {
-    "start": "PORT=3000 react-scripts start --env.REACT_APP_API=testing",
+    "start": "PORT=3000 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

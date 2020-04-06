@@ -15,6 +15,8 @@ import Home from './components/Home';
 
 const trackingId = process.env.REACT_APP_GOOGLE_TRACKING_ID || '';
 ReactGA.initialize(trackingId);
+ReactGA.pageview('/homepage');
+
 function App() {
 
   return (

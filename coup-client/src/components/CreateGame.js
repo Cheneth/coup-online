@@ -11,7 +11,6 @@ const baseUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:8000"
 export default class CreateGame extends Component {
 
     constructor(props) {
-        console.log(12, process.env)
         super(props)
     
         this.state = {

@@ -4,7 +4,6 @@ export default class ExchangeInfluences extends Component {
     
     constructor(props) {
         super(props)
-        console.log(props.influences)
         this.state = {
              influences: props.influences,
              keep: [],
@@ -23,7 +22,6 @@ export default class ExchangeInfluences extends Component {
                 kept: this.state.keep,
                 putBack: this.state.influences
             }
-            console.log(res);
             this.props.socket.emit('g-chooseExchangeDecision', res);
             this.props.doneExchangeInfluence();
         }
@@ -35,7 +33,7 @@ export default class ExchangeInfluences extends Component {
         })
         return ( 
             <div>
-                <p className="DecisionTitle">Choose which influences to keep</p>
+                <p className="DecisionTitle">Choose which influence(s) to keep</p>
                 {influences}
             </div>
         )

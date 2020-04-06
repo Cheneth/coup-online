@@ -26,7 +26,8 @@ export default class Home extends Component {
 
                 
             </div>
-            <p className="footer">Made by <a className="website-link" href="https://cheneth.github.io/" target="_blank" rel="noopener noreferrer">Ethan Chen</a></p>
+            <p className="footer">Made by <a className="website-link" href="https://github.com/cheneth" target="_blank" rel="noopener noreferrer">Ethan Chen</a></p>
+            <p className="version-number">Beta v0.8</p>
             </>
         )
     }

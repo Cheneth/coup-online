@@ -30,6 +30,14 @@ button{
   cursor: pointer;
 }
 
+.version-number {
+  color: #BCBCBC;
+  font-size: 10px;
+  position: absolute;
+  bottom: 0px;
+  right: 10px;
+}
+
 .website-link {
   cursor: pointer;
   text-decoration: none;

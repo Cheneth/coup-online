@@ -93,7 +93,7 @@ export default class CreateGame extends Component {
                 //TODO  handle error
                 console.log("error in creating namespace", err);
                 bind.setState({ isLoading: false });
-                bind.setState({ errorMsg: 'Error creating room' });
+                bind.setState({ errorMsg: 'Error creating room, server is unreachable' });
                 bind.setState({ isError: true });
             })
     }

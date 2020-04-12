@@ -34,7 +34,8 @@ export default class Coup extends Component {
              playAgain: null,
              logs: [],
              isDead: false,
-             waiting: true
+             waiting: true,
+             disconnected: false
         }
         const bind = this;
 
@@ -44,6 +45,10 @@ export default class Coup extends Component {
             this.props.socket.emit('g-playAgain');
         }}>Play Again</button>
         </>
+
+        this.props.socket.on('disconnect', reason => {
+            this.setState({ disconnected: true });
+        })
 
         this.props.socket.on('g-gameOver', (winner) => {
             bind.setState({winner: `${winner} Wins!`})
@@ -242,6 +247,7 @@ export default class Coup extends Component {
         let playAgain = null
         let isWaiting = true
         let waiting = null
+        let disconnected = null
         if(this.state.isChooseAction && this.state.playerIndex != null) {
             isWaiting = false;
             actionDecision = <ActionDecision doneAction={this.doneAction} deductCoins={this.deductCoins} name={this.props.name} socket={this.props.socket} money={this.state.players[this.state.playerIndex].money} players={this.state.players}></ActionDecision>
@@ -276,19 +282,40 @@ export default class Coup extends Component {
             isWaiting = false;
             blockDecision = <BlockDecision closeOtherVotes={this.closeOtherVotes} doneBlockVote={this.doneChallengeBlockingVote} name={this.props.name} action={this.state.blockingAction} socket={this.props.socket} ></BlockDecision>
         }
-        if(this.state.playerIndex != null) {
-            influences = this.state.players[this.state.playerIndex].influences.map((influence, index) => {
-                return  <div key={index} className="InfluenceUnitContainer">
-                            <span className="circle" style={{backgroundColor: `${this.influenceColorMap[influence]}`}}></span>
-                            <br></br>
-                            <h3>{influence}</h3>
-                        </div>
-                })
+        if(this.state.playerIndex != null && !this.state.isDead) {
+            influences = <>
+            <p>Your Influences</p>
+                {this.state.players[this.state.playerIndex].influences.map((influence, index) => {
+                    return  <div key={index} className="InfluenceUnitContainer">
+                                <span className="circle" style={{backgroundColor: `${this.influenceColorMap[influence]}`}}></span>
+                                <br></br>
+                                <h3>{influence}</h3>
+                            </div>
+                    })
+                }
+            </>
             
             coins = <p>Coins: {this.state.players[this.state.playerIndex].money}</p>
         }
-        if(isWaiting) {
+        if(isWaiting && !this.state.isDead) {
             waiting = <p>Waiting for other players...</p>
+        }
+        if(this.state.disconnected) {
+            return (
+                <div className="GameContainer">
+                    <div className="GameHeader">
+                        <div className="PlayerInfo">
+                            <p>You are: {this.props.name}</p>
+                            {coins}
+                        </div>
+                        <RulesModal/>
+                        <CheatSheetModal/>
+                    </div>
+                    <p>You have been disconnected :c</p>
+                    <p>Please recreate the game.</p>
+                    <p>Sorry for the inconvenience (シ_ _)シ</p>
+                </div>
+            )
         }
         return (
             <div className="GameContainer">
@@ -305,7 +332,6 @@ export default class Coup extends Component {
                     <EventLog logs={this.state.logs}></EventLog>
                 </div>
                 <div className="InfluenceSection">
-                    <p>Your Influences</p>
                     {influences}
                 </div>
                 <PlayerBoard players={this.state.players}></PlayerBoard>

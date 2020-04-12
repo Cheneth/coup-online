@@ -76,7 +76,23 @@ export default class Coup extends Component {
             bind.setState({ currentPlayer });
         });
         this.props.socket.on('g-addLog', (log) => {
-            bind.state.logs = [...bind.state.logs, log]
+            let splitLog=  log.split(' ');
+            let coloredLog = [];
+            coloredLog = splitLog.map((item, index) => {
+                let found = null
+                bind.state.players.forEach(player => {
+                    console.log(item, player.name)
+                    if(item === player.name){
+                        console.log('yee')
+                        found = <b style={{color: player.color}}>{player.name} </b>;
+                    }
+                })
+                if(found){
+                    return found;
+                }
+                return <>{item+' '}</>
+            })
+            bind.state.logs = [...bind.state.logs, coloredLog]
             if(bind.state.logs.length === 5){
                 bind.state.logs.shift();
             }

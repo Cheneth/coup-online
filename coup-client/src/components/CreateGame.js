@@ -6,8 +6,6 @@ import Coup from './game/Coup';
 const axios = require('axios');
 const baseUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:8000"
 
-// const baseUrl = "https://rocky-stream-49978.herokuapp.com"
-
 export default class CreateGame extends Component {
 
     constructor(props) {

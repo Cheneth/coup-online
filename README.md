@@ -40,5 +40,10 @@ In the client, there is an event log showing all players the last 4 actions to h
 
 A script is run to destroy game instances that have 0 connections.
 
+
+### Chicken Drumstick Emoji
+
+Courtesy of https://twemoji.twitter.com/
+
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)

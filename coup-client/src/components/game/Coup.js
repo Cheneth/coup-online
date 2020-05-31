@@ -86,9 +86,7 @@ export default class Coup extends Component {
             coloredLog = splitLog.map((item, index) => {
                 let found = null
                 bind.state.players.forEach(player => {
-                    console.log(item, player.name)
                     if(item === player.name){
-                        console.log('yee')
                         found = <b style={{color: player.color}}>{player.name} </b>;
                     }
                 })
@@ -247,7 +245,6 @@ export default class Coup extends Component {
         let playAgain = null
         let isWaiting = true
         let waiting = null
-        let disconnected = null
         if(this.state.isChooseAction && this.state.playerIndex != null) {
             isWaiting = false;
             actionDecision = <ActionDecision doneAction={this.doneAction} deductCoins={this.deductCoins} name={this.props.name} socket={this.props.socket} money={this.state.players[this.state.playerIndex].money} players={this.state.players}></ActionDecision>

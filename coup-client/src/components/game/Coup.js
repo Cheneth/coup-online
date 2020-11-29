@@ -58,7 +58,6 @@ export default class Coup extends Component {
             bind.setState({playAgain: null})
             bind.setState({winner: null})
             players = players.filter(x => !x.isDead);
-            console.log(players)
             let playerIndex = null;
             for(let i = 0; i < players.length; i++) {
                 console.log(players[i].name, this.props.name)
@@ -101,9 +100,7 @@ export default class Coup extends Component {
             }
             bind.setState({logs :bind.state.logs})
         })
-        this.props.socket.on('g-chooseAction', () => {
-            console.log(this.state.players, this.state.playerIndex)
-        
+        this.props.socket.on('g-chooseAction', () => {        
             bind.setState({ isChooseAction: true})
         });
         this.props.socket.on('g-openExchange', (drawTwo) => {

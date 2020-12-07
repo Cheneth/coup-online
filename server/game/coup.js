@@ -1,4 +1,5 @@
 const gameUtils = require('./utils')
+const constants = require("../utilities/constants");
 
 class CoupGame{
 
@@ -10,68 +11,13 @@ class CoupGame{
         this.currentPlayer = 0;
         this.deck = gameUtils.buildDeck();
         this.winner = '';
-        this.actions = {
-            income: {
-                influence: "all",
-                blockableBy: [],
-                isChallengeable: false,
-                moneyDelta: 1
-            },
-            foreign_aid: {
-                influence: "all",
-                blockableBy: ["duke"],
-                isChallengeable: false,
-                moneyDelta: 2
-            },
-            coup: {
-                influence: "all",
-                blockableBy: [],
-                isChallengeable: false,
-                moneyDelta: -7
-            },
-            tax: {
-                influence: "duke",
-                blockableBy: [],
-                isChallengeable: true,
-                moneyDelta: 3
-            },
-            assassinate: {
-                influence: "assassin",
-                blockableBy: ["contessa"],
-                isChallengeable: true,
-                moneyDelta: -3
-            },
-            exchange: {
-                influence: "ambassador",
-                blockableBy: [],
-                isChallengeable: true,
-                moneyDelta: 0
-            },
-            steal: {
-                influence: "captain",
-                blockableBy: ["ambassador", "captain"],
-                isChallengeable: true,
-                moneyDelta: 2 // EDGE CASE: if victim only has 1 or 0 coins
-            },
-        };
-        this.counterActions = { // all challengeable
-            block_foreign_aid: {
-                influences: ["duke"]
-            },
-            block_steal: {
-                influences: ["ambassador", "captain"]
-            },
-            block_assassinate: {
-                influences: ["contessa"]
-            },
-        }
+        this.actions = constants.Actions;
+        this.counterActions = constants.CounterActions;
         this.isChallengeBlockOpen = false; // if listening for challeng or block votes
         this.isRevealOpen = false; // if listening for what influence player will reveal
         this.isChooseInfluenceOpen = false; // if listening for what influence to lose
         this.isExchangeOpen = false; // if listening for result of ambassador exchange;
         this.votes = 0;
-        this.aliveCount = 0;
-        this.isPlayAgainOpen = false;
     }
 
     resetGame(startingPlayer = 0) {
@@ -91,16 +37,6 @@ class CoupGame{
     }
 
     listen() {
-        // action = {
-        //     action: "",
-        //     target: "",
-        //     source: ""
-        // }
-        // counterAction = {
-        //     counterAction: "",
-        //     target: "",
-        //     source: ""
-        // }
 
         this.players.map(x => {
             const socket = this.gameSocket.sockets[x.socketID];
@@ -202,7 +138,7 @@ class CoupGame{
                             for(let i = 0; i < bind.players[challengeeIndex].influences.length; i++) { //revealed card needs to be replaced
                                 if(bind.players[challengeeIndex].influences[i] == res.revealedCard) {
                                     bind.deck.push(bind.players[challengeeIndex].influences[i]);
-                                    bind.deck = gameUtils.shuffleDeck(bind.deck);
+                                    bind.deck = gameUtils.shuffleArray(bind.deck);
                                     bind.players[challengeeIndex].influences.splice(i,1);
                                     bind.players[challengeeIndex].influences.push(bind.deck.pop());
                                     break;
@@ -218,7 +154,7 @@ class CoupGame{
                             for(let i = 0; i < bind.players[challengeeIndex].influences.length; i++) {
                                 if(bind.players[challengeeIndex].influences[i] == res.revealedCard) {
                                     bind.deck.push(bind.players[challengeeIndex].influences[i]);
-                                    bind.deck = gameUtils.shuffleDeck(bind.deck);
+                                    bind.deck = gameUtils.shuffleArray(bind.deck);
                                     bind.players[challengeeIndex].influences.splice(i,1);
                                     break;
                                 }
@@ -232,7 +168,7 @@ class CoupGame{
                             for(let i = 0; i < bind.players[challengeeIndex].influences.length; i++) { //revealed card needs to be replaced
                                 if(bind.players[challengeeIndex].influences[i] == res.revealedCard) {
                                     bind.deck.push(bind.players[challengeeIndex].influences[i]);
-                                    bind.deck = gameUtils.shuffleDeck(bind.deck);
+                                    bind.deck = gameUtils.shuffleArray(bind.deck);
                                     bind.players[challengeeIndex].influences.splice(i,1);
                                     bind.players[challengeeIndex].influences.push(bind.deck.pop());
                                     break;
@@ -248,7 +184,7 @@ class CoupGame{
                             for(let i = 0; i < bind.players[challengeeIndex].influences.length; i++) { // 
                                 if(bind.players[challengeeIndex].influences[i] == res.revealedCard) {
                                     bind.deck.push(bind.players[challengeeIndex].influences[i]);
-                                    bind.deck = gameUtils.shuffleDeck(bind.deck);
+                                    bind.deck = gameUtils.shuffleArray(bind.deck);
                                     bind.players[challengeeIndex].influences.splice(i,1);
                                     break;
                                 }
@@ -267,7 +203,7 @@ class CoupGame{
                     for(let i = 0; i < bind.players[playerIndex].influences.length; i++) {
                         if(bind.players[playerIndex].influences[i] == res.influence) {
                             bind.deck.push(bind.players[playerIndex].influences[i]);
-                            bind.deck = gameUtils.shuffleDeck(bind.deck);
+                            bind.deck = gameUtils.shuffleArray(bind.deck);
                             bind.players[playerIndex].influences.splice(i,1);
                             break;
                         }
@@ -284,7 +220,7 @@ class CoupGame{
                     bind.players[playerIndex].influences = res.kept;
                     bind.deck.push(res.putBack[0]);
                     bind.deck.push(res.putBack[1]);
-                    bind.deck = gameUtils.shuffleDeck(bind.deck);
+                    bind.deck = gameUtils.shuffleArray(bind.deck);
                     bind.isExchangeOpen = false;
                     bind.nextTurn();
                 }

@@ -19,7 +19,7 @@ const CoupGame = require('./game/coup');
 // isReady: true } ], '', '')
 // game.start();
 // require("./routes")(app);
-const generateNamespace = require('./utilities/utilities.js')
+const utilities = require('./utilities/utilities');
 
 // Constants
 const port = 8000;
@@ -30,7 +30,7 @@ let namespaces = {}; //AKA party rooms
 app.get('/createNamespace', function (req, res) { 
     let newNamespace = '';
     while(newNamespace === '' || (newNamespace in namespaces)) {
-        newNamespace = generateNamespace(); //default length 6
+        newNamespace = utilities.generateNamespace(); //default length 6
     }
     const newSocket = io.of(`/${newNamespace}`);
     openSocket(newSocket, `/${newNamespace}`);

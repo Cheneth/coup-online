@@ -194,9 +194,10 @@ class CoupGame{
                 //if isBlock is false, prevaction is action
                 // res.revealedCard, prevaction, counterAction, challengee, challenger, isBlock
                 const challengeeIndex = bind.nameIndexMap[res.challengee];
+                const challengerIndex = bind.nameIndexMap[res.challenger];
                 if(bind.isRevealOpen) {
                     bind.isRevealOpen = false;
-                    if(res.isBlock) { //block challenge
+                    if(res.isBlock) { //block challenge (for example, a captain blocking a steal or a contessa blocking an assasinate)
                         if(res.revealedCard == res.counterAction.claim || (res.counterAction.counterAction == 'block_steal' && (res.revealedCard == 'ambassador' || res.revealedCard =='captain'))) { //challenge failed
                             bind.gameSocket.emit("g-addLog", `${res.challenger}'s challenge on ${res.challengee}'s block failed`)
                             for(let i = 0; i < bind.players[challengeeIndex].influences.length; i++) { //revealed card needs to be replaced
@@ -228,6 +229,7 @@ class CoupGame{
                         }
                     } else { //normal challenge
                         if(res.revealedCard == bind.actions[res.prevAction.action].influence) { // challenge failed
+                            console.log("CHALLENGE: " + res.revealedCard + " " + bind.actions[res.prevAction.action].influence);
                             bind.gameSocket.emit("g-addLog", `${res.challenger}'s challenge on ${res.challengee} failed`)
                             for(let i = 0; i < bind.players[challengeeIndex].influences.length; i++) { //revealed card needs to be replaced
                                 if(bind.players[challengeeIndex].influences[i] == res.revealedCard) {
@@ -238,10 +240,24 @@ class CoupGame{
                                     break;
                                 }
                             }
-                            bind.updatePlayers();
-                            bind.isChooseInfluenceOpen = true;
-                            bind.gameSocket.to(bind.nameSocketMap[res.challenger]).emit('g-chooseInfluence');
-                            bind.applyAction(res.prevAction);
+
+                            if (res.revealedCard == 'assassin' && res.prevAction.target == res.challenger 
+                                && bind.players[challengerIndex].influences.length == 2) {
+                                
+                                bind.deck.push(bind.players[challengeeIndex].influences[0]);
+                                bind.deck = gameUtils.shuffleDeck(bind.deck);
+                                bind.players[challengerIndex].influences.splice(0, 1);
+
+                                bind.updatePlayers();
+                                bind.isChooseInfluenceOpen = true;
+                                bind.gameSocket.to(bind.nameSocketMap[res.challenger]).emit('g-chooseInfluence');
+                                bind.applyAction(res.prevAction);
+                            } else {
+                                bind.updatePlayers();
+                                bind.isChooseInfluenceOpen = true;
+                                bind.gameSocket.to(bind.nameSocketMap[res.challenger]).emit('g-chooseInfluence');
+                                bind.applyAction(res.prevAction);
+                            }
                         } else { // challenge succeeded
                             bind.gameSocket.emit("g-addLog", `${res.challenger}'s challenge on ${res.challengee} succeeded`)
                             bind.gameSocket.emit("g-addLog", `${res.challengee} lost their ${res.revealedCard}`)
@@ -351,6 +367,7 @@ class CoupGame{
         console.log(this.players)
         console.log(action)
         let logTarget = '';
+
         if(action.target) {
             logTarget = ` on ${action.target}`;
         }

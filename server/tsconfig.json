@@ -1,0 +1,11 @@
+{
+    "compilerOptions": {
+      "outDir": "./built",
+      "allowJs": true,
+      "target": "es5",
+      "noImplicitAny": false,
+      "alwaysStrict": true
+    },
+    "include": ["./**/*"],
+    "exclude": ["./node_modules"],
+}

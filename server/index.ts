@@ -45,7 +45,7 @@ app.get('/exists/:namespace', function (req, res) { //returns bool
 })
 
 //game namespace: oneRoom
-openSocket = (gameSocket, namespace) => {
+function openSocket(gameSocket, namespace) {
     let players = []; //includes deleted for index purposes
     let partyMembers = []; //actual members
     let partyLeader = ''
@@ -67,6 +67,7 @@ openSocket = (gameSocket, namespace) => {
             partyMembers = players.map(x => {
                 return {name: x.player, socketID: x.socket_id, isReady: x.isReady}
             }).filter(x => x.name != '')
+            console.log("Party members: ");
             console.log(partyMembers);
             gameSocket.emit('partyUpdate', partyMembers) ;
         }
@@ -151,7 +152,7 @@ openSocket = (gameSocket, namespace) => {
     }, 10000)
 }
 
-startGame = (players, gameSocket, namespace) => {
+function startGame(players, gameSocket, namespace) {
     namespaces[namespace.substring(1)] = new CoupGame(players, gameSocket);
     namespaces[namespace.substring(1)].start();
 }

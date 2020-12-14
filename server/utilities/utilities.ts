@@ -1,4 +1,4 @@
-function generateNamespace(length = 6) {
+export function generateNamespace(length = 6) {
    var result           = '';
    var characters       = 'ABCDEFGHIJKLMNPQRSTUVWXYZ123456789';
    var charactersLength = characters.length;
@@ -7,7 +7,3 @@ function generateNamespace(length = 6) {
    }
    return result;
 };
-
-module.exports = {
-   generateNamespace: generateNamespace,
-}

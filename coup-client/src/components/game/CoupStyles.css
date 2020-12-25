@@ -357,6 +357,8 @@
         position: absolute;
         right: 10VW;
         top: 10VH;
+        overflow-y: scroll;
+        height: 9VH;
     }
     .GameHeader {
         height: 15VH;

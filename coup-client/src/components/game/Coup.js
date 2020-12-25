@@ -95,9 +95,6 @@ export default class Coup extends Component {
                 return <>{item+' '}</>
             })
             bind.state.logs = [...bind.state.logs, coloredLog]
-            if(bind.state.logs.length === 5){
-                bind.state.logs.shift();
-            }
             bind.setState({logs :bind.state.logs})
         })
         this.props.socket.on('g-chooseAction', () => {        

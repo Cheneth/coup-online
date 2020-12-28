@@ -198,6 +198,8 @@
     top: 60px;
     text-align: right;
     line-height: 40%;
+    overflow-y: scroll;
+    height: 90px;
 }
 .bold {
     font-weight: bold;
@@ -357,8 +359,6 @@
         position: absolute;
         right: 10VW;
         top: 10VH;
-        overflow-y: scroll;
-        height: 9VH;
     }
     .GameHeader {
         height: 15VH;

@@ -198,6 +198,8 @@
     top: 60px;
     text-align: right;
     line-height: 40%;
+    overflow-y: scroll;
+    height: 90px;
 }
 .bold {
     font-weight: bold;

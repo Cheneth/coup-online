@@ -12,7 +12,22 @@ export default class EventLog extends Component {
                     }
                     return <p>{x}</p>
                 })}
+                <div style={{ float:"left", clear: "both" }}
+                    ref={(el) => { this.messagesEnd = el; }}>
+                </div>
             </div>
         )
     }
+
+    scrollToBottom = () => {
+        this.messagesEnd.scrollIntoView({ behavior: "smooth" });
+      }
+      
+      componentDidMount() {
+        this.scrollToBottom();
+      }
+      
+      componentDidUpdate() {
+        this.scrollToBottom();
+      }
 }

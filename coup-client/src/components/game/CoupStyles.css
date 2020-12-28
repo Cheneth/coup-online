@@ -198,8 +198,15 @@
     top: 60px;
     text-align: right;
     line-height: 40%;
+}
+.EventLogBody {
     overflow-y: scroll;
-    height: 90px;
+    height: 9VH;
+    padding-right: 3px;
+}
+.EventLogTitle {
+    margin: 0;
+    margin-bottom: 5px;
 }
 .bold {
     font-weight: bold;

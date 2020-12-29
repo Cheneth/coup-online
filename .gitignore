@@ -106,3 +106,5 @@ dist
 ngrok
 
 .DS_Store
+server/package-lock.json
+built/

@@ -1,8 +1,8 @@
-const constants = require("../utilities/constants");
+import {CardNames} from "../utilities/constants";
 
-buildDeck = () => {
-    let deck = []
-    let cardNames = constants.CardNames.values();
+export function buildDeck() {
+    let deck: string[] = [];
+    let cardNames = Object.values(CardNames);
     for (let card of cardNames) {
         addToDeck(card, deck);
     }
@@ -16,9 +16,9 @@ buildDeck = () => {
     return deck;
 }
 
-function addToDeck(cardName, deck) {
+export function addToDeck(cardName: string, deck: string[]) {
     if (!cardName || !deck) {
-        console.log("cardName and deck must not be undefined.")
+        console.log("cardName and deck must not be undefined.");
         return;
     }
     for (let i = 0; i < 3; i++) {
@@ -26,7 +26,7 @@ function addToDeck(cardName, deck) {
     }
 }
 
-shuffleArray = (arr) => {
+export function shuffleArray(arr: Object[]) {
     if (!arr) {
         console.log(`arr must not be undefined. arr was ${arr}`);
     }
@@ -41,50 +41,50 @@ shuffleArray = (arr) => {
     return arr;
 }
 
-buildNameSocketMap = (players) => {
-    let map = {}
+export function buildNameSocketMap(players: Player[]): {[key: string]: string} {
+    let map: {[key: string]: string} = {};
     players.map((x) => {
         map[x.name] = x.socketID;
-    })
-    return map
+    });
+    return map;
 }
 
-buildNameIndexMap = (players) => {
-    let map = {}
+export function buildNameIndexMap(players: Player[]): {[key: string]: number} {
+    let map: {[key: string]: number} = {};
     players.map((x, index) => {
         map[x.name] = index;
-    })
-    return map
+    });
+    return map;
 }
 
-buildPlayers = (players) => {
-    colors = ['#73C373', '#7AB8D3', '#DD6C75', '#8C6CE6', '#EA9158', '#CB8F8F', '#FFC303']
+export type Player = {
+    name: string;
+    socketID: string;
+    color: string;
+    money: number;
+    influences: string[];
+    isDead: boolean;
+    isReady: boolean;
+    chosen: boolean;
+}
+
+export function buildPlayers(players: Player[]) {
+    let colors: string[] = ['#73C373', '#7AB8D3', '#DD6C75', '#8C6CE6', '#EA9158', '#CB8F8F', '#FFC303'];
     shuffleArray(colors);
 
-    players.forEach(x => {
-        delete x.chosen;
+    players.forEach((x, index) => {
         x.money = 2;
         x.influences = [];
         x.isDead = false;
-        x.color = colors.pop();
-        delete x.isReady;
+        x.color = colors[index];
     });
     console.log(players);
     return players;
 }
 
-exportPlayers = (players) => {
+export function exportPlayers(players: Player[]) {
     players.forEach(x => {
-        delete x.socketID;
+        x.socketID = '';
     });
     return players;
-}
-
-module.exports = {
-    buildDeck: buildDeck,
-    buildPlayers: buildPlayers,
-    exportPlayers: exportPlayers,
-    shuffleArray: shuffleArray,
-    buildNameSocketMap: buildNameSocketMap,
-    buildNameIndexMap: buildNameIndexMap
 }

@@ -179,21 +179,14 @@ class CoupGame{
 
                             if (res.revealedCard == 'assassin' && res.prevAction.target == res.challenger 
                                 && bind.players[challengerIndex].influences.length == 2) {
-                                
                                 bind.deck.push(bind.players[challengeeIndex].influences[0]);
-                                bind.deck = gameUtils.shuffleDeck(bind.deck);
+                                bind.deck = gameUtils.shuffleArray(bind.deck);
                                 bind.players[challengerIndex].influences.splice(0, 1);
-
-                                bind.updatePlayers();
-                                bind.isChooseInfluenceOpen = true;
-                                bind.gameSocket.to(bind.nameSocketMap[res.challenger]).emit('g-chooseInfluence');
-                                bind.applyAction(res.prevAction);
-                            } else {
-                                bind.updatePlayers();
-                                bind.isChooseInfluenceOpen = true;
-                                bind.gameSocket.to(bind.nameSocketMap[res.challenger]).emit('g-chooseInfluence');
-                                bind.applyAction(res.prevAction);
                             }
+                            bind.updatePlayers();
+                            bind.isChooseInfluenceOpen = true;
+                            bind.gameSocket.to(bind.nameSocketMap[res.challenger]).emit('g-chooseInfluence');
+                            bind.applyAction(res.prevAction);
                         } else { // challenge succeeded
                             bind.gameSocket.emit("g-addLog", `${res.challenger}'s challenge on ${res.challengee} succeeded`)
                             bind.gameSocket.emit("g-addLog", `${res.challengee} lost their ${res.revealedCard}`)

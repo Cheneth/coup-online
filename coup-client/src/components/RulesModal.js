@@ -68,7 +68,7 @@ export default class RulesModal extends Component {
             <h3>Duke</h3>
             <p><b id="duke-color">TAX</b>: Collect 3 coins from the treasury. Not blockable. Can block Foreign Aid.</p>
             <h3>Ambassador</h3>
-            <p><b id="ambassador-color">EXCHANGE</b>: Draw 2 influences into your hand and pick any 2 influences to put back. Not blockable. Can block <hl id="captain-color">STEAL</hl></p>
+            <p><b id="ambassador-color">EXCHANGE</b>: Draw 2 influences into your hand and pick any 2 influences to put back. Not blockable.</p>
             <h3>Contessa</h3>
             <p><b id="contessa-color">BLOCK ASSASSINATION</b>: Can block <b id="assassin-color">assassinations</b>. Not blockable.</p>
             <h3>Other Actions</h3>

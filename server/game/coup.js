@@ -136,6 +136,7 @@ class CoupGame{
                     if(res.isBlock) { //block challenge (for example, a captain blocking a steal or a contessa blocking an assasinate)
                         if(res.revealedCard == res.counterAction.claim || (res.counterAction.counterAction == 'block_steal' && (res.revealedCard == 'ambassador' || res.revealedCard =='captain'))) { //challenge failed
                             bind.gameSocket.emit("g-addLog", `${res.challenger}'s challenge on ${res.challengee}'s block failed`)
+                            bind.gameSocket.emit("g-addLog", `${res.challengee} lost their ${res.revealedCard}`)
                             for(let i = 0; i < bind.players[challengeeIndex].influences.length; i++) { //revealed card needs to be replaced
                                 if(bind.players[challengeeIndex].influences[i] == res.revealedCard) {
                                     bind.deck.push(bind.players[challengeeIndex].influences[i]);
@@ -167,6 +168,7 @@ class CoupGame{
                         if(res.revealedCard == bind.actions[res.prevAction.action].influence) { // challenge failed
                             console.log("CHALLENGE: " + res.revealedCard + " " + bind.actions[res.prevAction.action].influence);
                             bind.gameSocket.emit("g-addLog", `${res.challenger}'s challenge on ${res.challengee} failed`)
+                            bind.gameSocket.emit("g-addLog", `${res.challengee} lost their ${res.revealedCard}`)
                             for(let i = 0; i < bind.players[challengeeIndex].influences.length; i++) { //revealed card needs to be replaced
                                 if(bind.players[challengeeIndex].influences[i] == res.revealedCard) {
                                     bind.deck.push(bind.players[challengeeIndex].influences[i]);

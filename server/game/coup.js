@@ -211,8 +211,6 @@ class CoupGame{
                     bind.gameSocket.emit("g-addLog", `${res.playerName} lost their ${res.influence}`)
                     for(let i = 0; i < bind.players[playerIndex].influences.length; i++) {
                         if(bind.players[playerIndex].influences[i] == res.influence) {
-                            bind.deck.push(bind.players[playerIndex].influences[i]);
-                            bind.deck = gameUtils.shuffleArray(bind.deck);
                             bind.players[playerIndex].influences.splice(i,1);
                             break;
                         }

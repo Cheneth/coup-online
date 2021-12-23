@@ -80,7 +80,7 @@ export default class BlockDecision extends Component {
             if(this.props.action.action === 'foreign_aid') {
                 control = <>
                 <p><b>{this.props.action.source}</b> is trying to use Foreign Aid</p>
-                <button onClick={() => this.block('block_foreign_aid')}>Block Foreign Aid</button>
+                            <button onClick={() => this.block('block_foreign_aid')}>Claim Duke to Block Foreign Aid</button>
                 </>
             } else if(this.props.action.action === 'steal') {
                 control = <button onClick={() => this.pickClaim('block_steal')}>Block Steal</button>

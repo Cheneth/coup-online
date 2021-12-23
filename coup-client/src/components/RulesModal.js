@@ -75,6 +75,8 @@ export default class RulesModal extends Component {
             <p><b>INCOME</b>: Collect 1 coins from the treasury.</p>
             <p><b>FOREIGN AID</b>: Collect 2 coins from the treasury. Blockable by <hl id="duke-color">Duke</hl>.</p>
             <p><b>COUP</b>: Pay 7 coins and choose a target to lose an influence. If a player starts their turn with 10 or more coins, they must Coup. Not Blockable.</p>
+            <br/>
+            <p><b>Attribution</b>: Some images in this project from game-icons.net.</p>
         </div>
     </div>
     </ReactModal>

@@ -29,13 +29,13 @@ export default class ExchangeInfluences extends Component {
 
     render() {
         const influences = this.state.influences.map((x, index) => {
-            return <button key={index} onClick={() => this.selectInfluence(index)}>{x}</button>
+            return <button className={`${x}-color`} key={index} onClick={() => this.selectInfluence(index)}>{x}</button>
         })
         return ( 
-            <div>
+            <>
                 <p className="DecisionTitle">Choose which influence(s) to keep</p>
                 {influences}
-            </div>
+            </>
         )
     }
 }

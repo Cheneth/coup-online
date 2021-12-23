@@ -332,24 +332,20 @@
 #ambassador {
     background-color: #B4CA1F;
 }
-#captain-color {
+.captain-color {
   color: #80C6E5;
 }
-#duke-color {
+.duke-color {
   color: #D55DC7;
 }
-#assassin-color {
+.assassin-color {
   color: #3B3B3B;
 }
-#contessa-color {
+.contessa-color {
   color: #E35646;
 }
-#ambassador-color {
+.ambassador-color {
   color: #B4CA1F;
-}
-.DecisionTitle {
-    text-align: left;
-    margin-left: 22px;
 }
 
 @media only screen and (min-width: 1024px) {
@@ -392,9 +388,6 @@
     }
     .GameHeader {
         height: 15VH;
-    }
-    .DecisionTitle {
-        margin-left: 10VW;
     }
     .DecisionButtonsContainer  {
         text-align: center;

@@ -15,13 +15,13 @@ export default class ChooseInfluence extends Component {
 
     render() {
         const influences = this.props.influences.map((x, index) => {
-            return <button id={`${x}`} key={index} onClick={() => this.selectInfluence(x)}>{x}</button>
+            return <button className={`${x}-color`} key={index} onClick={() => this.selectInfluence(x)}>{x}</button>
         })
         return ( 
-            <div>
+            <>
                 <p className="DecisionTitle">Choose an influence to lose </p>
                 {influences}
-            </div>
+            </>
         )
     }
 }

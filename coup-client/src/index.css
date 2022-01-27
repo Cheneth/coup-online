@@ -180,3 +180,16 @@ button{
 .readyUnit p, .readyUnit b{
   color: #ffffff
 }
+
+.languageContainer {
+  bottom: 0;
+  font-size: 10px;
+  height: 20px;
+  left: 10px;
+  position: absolute;
+}
+
+.languageContainer img {
+  width: 20px;
+  margin-right: 5px;
+}

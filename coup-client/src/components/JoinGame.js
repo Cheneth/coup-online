@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
+import { withTranslation } from 'react-i18next';
 import io from "socket.io-client";
 import Coup from './game/Coup';
 
 const axios = require('axios');
 const baseUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000' 
 
-export default class JoinGame extends Component {
+class JoinGame extends Component {
 
     constructor(props) {
         super(props)
@@ -76,12 +77,12 @@ export default class JoinGame extends Component {
     }
 
     attemptJoinParty = () => {
-
+        const { t } = this.props;
         if(this.state.name === '') {
             //TODO  handle error
             console.log('Please enter a name');
             this.setState({ 
-                errorMsg: 'Please enter a name',
+                errorMsg: t('join.enterName'),
                 isError: true 
             });
             return
@@ -90,7 +91,7 @@ export default class JoinGame extends Component {
             //TODO  handle error
             console.log('Please enter a room code');
             this.setState({ 
-                errorMsg: 'Please enter a room code',
+                errorMsg: t('join.enterRoomCode'),
                 isError: true
             });
             return
@@ -111,7 +112,7 @@ export default class JoinGame extends Component {
                     console.log('Invalid Party Code')
                     bind.setState({ 
                         isLoading: false,
-                        errorMsg: 'Invalid Party Code',
+                        errorMsg: t('join.invalidRoomCode'),
                         isError: true
                     });
                 }
@@ -121,7 +122,7 @@ export default class JoinGame extends Component {
                 console.log("error in getting exists", err);
                 bind.setState({ 
                     isLoading: false,
-                    errorMsg: 'Server error',
+                    errorMsg: t('join.serverError'),
                     isError: true
                 });
             })
@@ -135,6 +136,7 @@ export default class JoinGame extends Component {
     }
 
     render() {
+        const { t } = this.props;
         if(this.state.isGameStarted) {
             return (<Coup name={this.state.name} socket={this.state.socket}></Coup>);
         }
@@ -145,18 +147,18 @@ export default class JoinGame extends Component {
             error = <b>{this.state.errorMsg}</b>
         }
         if(this.state.isInRoom) {
-            joinReady = <button className="joinButton" onClick={this.reportReady} disabled={this.state.isReady}>Ready</button>
+            joinReady = <button className="joinButton" onClick={this.reportReady} disabled={this.state.isReady}>{t('join.ready')}</button>
         } else {
-            joinReady = <button className="joinButton" onClick={this.attemptJoinParty} disabled={this.state.isLoading}>{this.state.isLoading ? 'Joining...': 'Join'}</button>
+            joinReady = <button className="joinButton" onClick={this.attemptJoinParty} disabled={this.state.isLoading}>{this.state.isLoading ? t('join.joining'): t('join.join')}</button>
         }
         if(this.state.isReady) {
-            ready = <b style={{ color: '#5FC15F' }}>You are ready!</b>
+            ready = <b style={{ color: '#5FC15F' }}>{t('join.selfReady')}</b>
             joinReady = null
         }
 
         return (
             <div className="joinGameContainer">
-                <p>Your Name</p>
+                <p>{t('join.yourName')}</p>
                 <input
                     type="text" value={this.state.name} disabled={this.state.isLoading}
                     onChange={e => {
@@ -168,13 +170,13 @@ export default class JoinGame extends Component {
                             this.onNameChange(e.target.value);
                         } else {
                             this.setState({
-                                errorMsg: 'Name must be less than 9 characters',
+                                errorMsg: t('join.nameLengthValidation'),
                                 isError: true
                             })
                         }
                     }}
                 />
-                <p>Room Code</p>
+                <p>{t('join.roomCode')}</p>
                 <input
                     type="text" value={this.state.roomCode} disabled={this.state.isLoading}
                     onChange={e => this.onCodeChange(e.target.value)}
@@ -190,10 +192,10 @@ export default class JoinGame extends Component {
                             let ready = null
                             let readyUnitColor = '#E46258'
                             if(item.isReady) {
-                                ready = <b>Ready!</b>
+                                ready = <b>{t('join.ready')}</b>
                                 readyUnitColor = '#73C373'
                             } else {
-                                ready = <b>Not Ready</b>
+                                ready = <b>{t('join.notReady')}</b>
                             }
                             return (
                                     <div className="readyUnit" style={{backgroundColor: readyUnitColor}} key={index}>
@@ -207,3 +209,5 @@ export default class JoinGame extends Component {
         )
     }
 }
+
+export default withTranslation()(JoinGame);

@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
+import { withTranslation } from 'react-i18next';
 
-export default class ExchangeInfluences extends Component {
+class ExchangeInfluences extends Component {
     
     constructor(props) {
         super(props)
@@ -28,14 +29,17 @@ export default class ExchangeInfluences extends Component {
     }
 
     render() {
+        const { t } = this.props;
         const influences = this.state.influences.map((x, index) => {
-            return <button key={index} onClick={() => this.selectInfluence(index)}>{x}</button>
+            return <button key={index} onClick={() => this.selectInfluence(index)}>{t('common.influences.' + x)}</button>
         })
         return ( 
             <div>
-                <p className="DecisionTitle">Choose which influence(s) to keep</p>
+                <p className="DecisionTitle">{t('game.exchangeInfluences.choose')}</p>
                 {influences}
             </div>
         )
     }
 }
+
+export default withTranslation()(ExchangeInfluences);

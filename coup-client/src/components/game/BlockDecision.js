@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
+import { withTranslation } from 'react-i18next';
 
-export default class BlockDecision extends Component {
+class BlockDecision extends Component {
 
     constructor(props) {
         super(props)
@@ -74,24 +75,25 @@ export default class BlockDecision extends Component {
     }
 
     render() {
+        const { t } = this.props;
         let control = null
         let pickClaim = null
         if(!this.state.isPickingClaim) {
             if(this.props.action.action === 'foreign_aid') {
                 control = <>
-                <p><b>{this.props.action.source}</b> is trying to use Foreign Aid</p>
-                <button onClick={() => this.block('block_foreign_aid')}>Block Foreign Aid</button>
+                <p><b>{this.props.action.source}</b> {t('game.blockDecision.foreignAid')}</p>
+                <button onClick={() => this.block('block_foreign_aid')}>{t('game.blockDecision.blockForeignAid')}</button>
                 </>
             } else if(this.props.action.action === 'steal') {
-                control = <button onClick={() => this.pickClaim('block_steal')}>Block Steal</button>
+                control = <button onClick={() => this.pickClaim('block_steal')}>{t('game.blockDecision.blockSteal')}</button>
             } else if(this.props.action.action === 'assassinate') {
-                control = <button onClick={() => this.block('block_assassinate')}>Block Assassination</button>
+                control = <button onClick={() => this.block('block_assassinate')}>{t('game.blockDecision.blockAssassination')}</button>
             }
         } else {
             pickClaim = <>
-                <p>To block steal, do you claim Ambassador or Captain?</p>
-                <button onClick={() => this.block(this.state.decision, 'ambassador')}>Ambassador</button>
-                <button onClick={() => this.block(this.state.decision, 'captain')}>Captain</button>
+                <p>{t('game.blockDecision.blockStealClaim')}</p>
+                <button onClick={() => this.block(this.state.decision, 'ambassador')}>{t('common.influences.ambassador')}</button>
+                <button onClick={() => this.block(this.state.decision, 'captain')}>{t('common.influences.captain')}</button>
             </>
         }
         
@@ -104,3 +106,5 @@ export default class BlockDecision extends Component {
         )
     }
 }
+
+export default withTranslation()(BlockDecision);

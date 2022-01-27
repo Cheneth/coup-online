@@ -2,11 +2,12 @@ import React, { Component } from 'react'
 import io from "socket.io-client";
 import { ReactSortable } from "react-sortablejs";
 import Coup from './game/Coup';
+import { withTranslation } from 'react-i18next';
 
 const axios = require('axios');
 const baseUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:8000"
 
-export default class CreateGame extends Component {
+class CreateGame extends Component {
 
     constructor(props) {
         super(props)
@@ -115,6 +116,7 @@ export default class CreateGame extends Component {
     }
 
     render() {
+        const { t } = this.props;
         if(this.state.isGameStarted) {
             return (<Coup name={this.state.name} socket={this.state.socket}></Coup>)
         }
@@ -125,7 +127,7 @@ export default class CreateGame extends Component {
         let youCanSort = null;
         if(!this.state.isInRoom) {
             createButton = <>
-            <button className="createButton" onClick={this.createParty} disabled={this.state.isLoading}>{this.state.isLoading ? 'Creating...': 'Create'}</button>
+            <button className="createButton" onClick={this.createParty} disabled={this.state.isLoading}>{this.state.isLoading ? t('create.creating'): t('create.create')}</button>
             <br></br>
             </>
         }
@@ -133,18 +135,18 @@ export default class CreateGame extends Component {
             error = <b>{this.state.errorMsg}</b>
         }
         if(this.state.roomCode !== '' && !this.state.isLoading) {
-            youCanSort = <p>You can drag to re-arrange the players in a specific turn order!</p>
+            youCanSort = <p>{t('create.rearrange')}</p>
             roomCode = <div>
-                    <p>ROOM CODE: <br></br> <br></br><b className="RoomCode" onClick={this.copyCode}>{this.state.roomCode} <span className="iconify" data-icon="typcn-clipboard" data-inline="true"></span></b></p>
-                    {this.state.copied ? <p>Copied to clipboard</p> : null}
+                    <p>{t('create.roomCode')}: <br></br> <br></br><b className="RoomCode" onClick={this.copyCode}>{this.state.roomCode} <span className="iconify" data-icon="typcn-clipboard" data-inline="true"></span></b></p>
+                    {this.state.copied ? <p>{t('create.copied')}</p> : null}
                 </div>
         }
         if(this.state.canStart) {
-            startGame = <button className="startGameButton" onClick={this.startGame}>Start Game</button>
+            startGame = <button className="startGameButton" onClick={this.startGame}>{t('create.start')}</button>
         }
         return (
             <div className="createGameContainer">
-                <p>Please enter your name</p>
+                <p>{t('create.enterName')}</p>
                 <input
                     type="text" value={this.state.name} disabled={this.state.isLoading || this.state.isInRoom}
                     onChange={e => {
@@ -156,7 +158,7 @@ export default class CreateGame extends Component {
                             this.onNameChange(e.target.value);
                         } else {
                             this.setState({
-                                errorMsg: 'Name must be less than 11 characters',
+                                errorMsg: t('create.nameLengthValidation'),
                                 isError: true
                             })
                         }
@@ -175,10 +177,10 @@ export default class CreateGame extends Component {
                             let ready = null
                             let readyUnitColor = '#E46258'
                             if(item.isReady) {
-                                ready = <b>Ready!</b>
+                                ready = <b>{t('create.ready')}</b>
                                 readyUnitColor = '#73C373'
                             } else {
-                                ready = <b>Not Ready</b>
+                                ready = <b>{t('create.notReady')}</b>
                             }
                             return (
                                     <div className="readyUnit" style={{backgroundColor: readyUnitColor}} key={index}>
@@ -196,3 +198,5 @@ export default class CreateGame extends Component {
         )
     }
 }
+
+export default withTranslation()(CreateGame);

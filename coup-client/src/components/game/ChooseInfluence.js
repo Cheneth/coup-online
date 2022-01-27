@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
+import { withTranslation } from 'react-i18next';
 
-export default class ChooseInfluence extends Component {
+class ChooseInfluence extends Component {
     
     selectInfluence = (influence) => {
         // res.revealedCard, prevaction, counterAction, challengee, challenger, isBlock
@@ -14,14 +15,17 @@ export default class ChooseInfluence extends Component {
     }
 
     render() {
+        const { t } = this.props;
         const influences = this.props.influences.map((x, index) => {
-            return <button id={`${x}`} key={index} onClick={() => this.selectInfluence(x)}>{x}</button>
+            return <button id={`${x}`} key={index} onClick={() => this.selectInfluence(x)}>{t('common.influences.' + x)}</button>
         })
         return ( 
             <div>
-                <p className="DecisionTitle">Choose an influence to lose </p>
+                <p className="DecisionTitle">{t('game.chooseInfluence.toLose')}</p>
                 {influences}
             </div>
         )
     }
 }
+
+export default withTranslation()(ChooseInfluence);

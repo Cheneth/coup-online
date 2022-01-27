@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
+import { withTranslation } from 'react-i18next';
 
-export default class BlockChallengeDecision extends Component {
+class BlockChallengeDecision extends Component {
 
     vote = (isChallenging) => {
         this.props.closeOtherVotes('challenge-block')
@@ -18,12 +19,15 @@ export default class BlockChallengeDecision extends Component {
     }
 
     render() {
+        const { t } = this.props;
         return (
             <>
-                <p>{this.props.counterAction.source} is trying to block {this.props.prevAction.action} from {this.props.prevAction.source} as {this.props.counterAction.claim}</p>
-                <button onClick={() => this.vote(true)}>Challenge</button>
+                <p>{this.props.counterAction.source} {t('game.blockChallengeDecision.tryBlock')} {t('common.actions.' + this.props.prevAction.action)} {t('game.blockChallengeDecision.from')} {this.props.prevAction.source} {t('game.blockChallengeDecision.as')} {t('common.influences.' + this.props.counterAction.claim)}</p>
+                <button onClick={() => this.vote(true)}>{t('game.blockChallengeDecision.challenge')}</button>
                 {/* <button onClick={() => this.vote(false)}>Pass</button> */}
             </>
         )
     }
 }
+
+export default withTranslation()(BlockChallengeDecision);

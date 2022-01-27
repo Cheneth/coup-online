@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { Link } from "react-router-dom";
 import chicken from "../assets/Chicken.svg"
 import RulesModal from './RulesModal';
-import Language from './Language';
 import { withTranslation } from 'react-i18next';
 
 class Home extends Component {

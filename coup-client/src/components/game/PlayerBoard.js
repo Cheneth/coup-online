@@ -1,14 +1,16 @@
 import React from 'react'
+import { withTranslation } from 'react-i18next';
 import './PlayerBoardStyles.css'
 
-export default function PlayerBoard(props) {
+function PlayerBoard(props) {
+    const { t } = props;
     let boardItems = null
     if(props.players.length > 1) {
         boardItems = props.players.map((player, index) =>
             <span className="PlayerBoardItem" style={{ backgroundColor: `${player.color}` }} key={index}>
                 <h2>{player.name}</h2>
-                <p>Coins: {player.money}</p>
-                <p>Influences: {player.influences.length}</p>
+                <p>{t('game.playerBoard.coins')}: {player.money}</p>
+                <p>{t('game.playerBoard.influences')}: {player.influences.length}</p>
                 {/* <p>{player.influences.join(', ')}</p> */}
             </span>
         );
@@ -20,5 +22,4 @@ export default function PlayerBoard(props) {
     )
   }
 
-
-
+export default withTranslation()(PlayerBoard);

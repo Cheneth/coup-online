@@ -1,19 +1,21 @@
 import React, { Component } from 'react'
+import { withTranslation } from 'react-i18next';
 
-export default class RevealDecision extends Component {
+class RevealDecision extends Component {
 
     constructor(props) {
         super(props)
 
+        const { t } = this.props;
         this.act = this.props.res.isBlock ? this.props.res.counterAction.counterAction : this.props.res.action.action
         this.actionMap = {
-            tax: ["duke"],
-            assassinate: ["assassin"],
-            exchange: ["ambassador"],
-            steal: ["captain"],
-            block_foreign_aid: ["duke"],
-            block_steal: ["ambassador", "captain"],
-            block_assassinate: ["contessa"],
+            tax: [t('common.influences.duke')],
+            assassinate: [t('common.influences.assasin')],
+            exchange: [t('common.influences.ambassador')],
+            steal: [t('common.influences.captain')],
+            block_foreign_aid: [t('common.influences.duke')],
+            block_steal: [t('common.influences.ambassador'), t('common.influences.captain')],
+            block_assassinate: [t('common.influences.contessa')],
         }
     }
     
@@ -33,14 +35,17 @@ export default class RevealDecision extends Component {
     }
 
     render() {
+        const { t } = this.props;
         const influences = this.props.influences.map((x, index) => {
-            return <button id={x} key={index} onClick={() => this.selectInfluence(x)}>{x}</button>
+            return <button id={x} key={index} onClick={() => this.selectInfluence(x)}>{t('common.influences.' + x)}</button>
         })
         return ( 
             <div>
-                <p>Your <b>{this.act}</b> has been challenged! If you don't reveal {this.actionMap[this.act].join(' or ')} you'll lose influence! </p>
+                <p>{t('game.revealDecision.challenge1')} <b>{t('common.actions.' + this.act)}</b> {t('game.revealDecision.challenge2')} {t('game.revealDecision.reveal1')} {this.actionMap[this.act].join(' ' + t('game.revealDecision.or') + ' ')} {t('game.revealDecision.reveal2')} </p>
                 {influences}
             </div>
         )
     }
 }
+
+export default withTranslation()(RevealDecision);

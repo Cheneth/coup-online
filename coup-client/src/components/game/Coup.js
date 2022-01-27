@@ -9,14 +9,16 @@ import ChooseInfluence from './ChooseInfluence';
 import ExchangeInfluences from './ExchangeInfluences';
 import './CoupStyles.css';
 import EventLog from './EventLog';
-import ReactModal from 'react-modal';
 import CheatSheetModal from '../CheatSheetModal';
 import RulesModal from '../RulesModal';
+import { withTranslation } from 'react-i18next';
 
-export default class Coup extends Component {
+class Coup extends Component {
 
     constructor(props) {
         super(props)
+
+        const { t } = props;
     
         this.state = {
              action: null,
@@ -43,7 +45,7 @@ export default class Coup extends Component {
         <br></br>
         <button className="startGameButton" onClick={() => {
             this.props.socket.emit('g-playAgain');
-        }}>Play Again</button>
+        }}>{t('game.playAgain')}</button>
         </>
 
         this.props.socket.on('disconnect', reason => {
@@ -51,7 +53,7 @@ export default class Coup extends Component {
         })
 
         this.props.socket.on('g-gameOver', (winner) => {
-            bind.setState({winner: `${winner} Wins!`})
+            bind.setState({winner: `${winner} ${t('game.wins')}`})
             bind.setState({playAgain: bind.playAgainButton})
         })
         this.props.socket.on('g-updatePlayers', (players) => {
@@ -225,6 +227,8 @@ export default class Coup extends Component {
     }
     
     render() {
+        const { t } = this.props;
+
         let actionDecision = null
         let currentPlayer = null
         let revealDecision = null
@@ -244,7 +248,7 @@ export default class Coup extends Component {
             actionDecision = <ActionDecision doneAction={this.doneAction} deductCoins={this.deductCoins} name={this.props.name} socket={this.props.socket} money={this.state.players[this.state.playerIndex].money} players={this.state.players}></ActionDecision>
         }
         if(this.state.currentPlayer) {
-            currentPlayer = <p>It is <b>{this.state.currentPlayer}</b>'s turn</p>
+          currentPlayer = <p>{t('game.turn1')} <b>{this.state.currentPlayer}</b>{t('game.turn2')}</p>
         }
         if(this.state.revealingRes) {
             isWaiting = false;
@@ -255,7 +259,7 @@ export default class Coup extends Component {
             chooseInfluenceDecision = <ChooseInfluence doneChooseInfluence={this.doneChooseInfluence} name ={this.props.name} socket={this.props.socket} influences={this.state.players.filter(x => x.name === this.props.name)[0].influences}></ChooseInfluence>
         }
         if(this.state.action != null || this.state.blockChallengeRes != null || this.state.blockingAction !== null){
-            pass = <button onClick={() => this.pass()}>Pass</button>
+            pass = <button onClick={() => this.pass()}>{t('game.pass')}</button>
         }
         if(this.state.action != null) {
             isWaiting = false;
@@ -275,36 +279,36 @@ export default class Coup extends Component {
         }
         if(this.state.playerIndex != null && !this.state.isDead) {
             influences = <>
-            <p>Your Influences</p>
+            <p>{t('game.yourInfluences')}</p>
                 {this.state.players[this.state.playerIndex].influences.map((influence, index) => {
                     return  <div key={index} className="InfluenceUnitContainer">
                                 <span className="circle" style={{backgroundColor: `${this.influenceColorMap[influence]}`}}></span>
                                 <br></br>
-                                <h3>{influence}</h3>
+                                <h3>{t('common.influences.' + influence)}</h3>
                             </div>
                     })
                 }
             </>
             
-            coins = <p>Coins: {this.state.players[this.state.playerIndex].money}</p>
+            coins = <p>{t('game.coins')}: {this.state.players[this.state.playerIndex].money}</p>
         }
         if(isWaiting && !this.state.isDead) {
-            waiting = <p>Waiting for other players...</p>
+            waiting = <p>{t('game.waiting')}</p>
         }
         if(this.state.disconnected) {
             return (
                 <div className="GameContainer">
                     <div className="GameHeader">
                         <div className="PlayerInfo">
-                            <p>You are: {this.props.name}</p>
+                            <p>{t('game.youAre')}: {this.props.name}</p>
                             {coins}
                         </div>
                         <RulesModal/>
                         <CheatSheetModal/>
                     </div>
-                    <p>You have been disconnected :c</p>
-                    <p>Please recreate the game.</p>
-                    <p>Sorry for the inconvenience (シ_ _)シ</p>
+                    <p>{t('game.disconectedP1')}</p>
+                    <p>{t('game.disconectedP2')}</p>
+                    <p>{t('game.disconectedP3')}</p>
                 </div>
             )
         }
@@ -312,7 +316,7 @@ export default class Coup extends Component {
             <div className="GameContainer">
                 <div className="GameHeader">
                     <div className="PlayerInfo">
-                        <p>You are: {this.props.name}</p>
+                        <p>{t('game.youAre')}: {this.props.name}</p>
                         {coins}
                     </div>
                     <div className="CurrentPlayer">
@@ -344,3 +348,5 @@ export default class Coup extends Component {
         )
     }
 }
+
+export default withTranslation()(Coup);

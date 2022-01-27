@@ -1,11 +1,13 @@
 import React, { Component } from 'react'
+import { withTranslation } from 'react-i18next';
 
-export default class EventLog extends Component {
+class EventLog extends Component {
     
     render() {
+        const { t } = this.props;
         return (
             <div className="EventLogContainer">
-                <p className="bold EventLogTitle">Event Log</p>
+                <p className="bold EventLogTitle">{t('game.eventLog.eventLog')}</p>
                 <div className="EventLogBody">
                    {this.props.logs.map((x, index) => {
                         if(index === this.props.logs.length-1){
@@ -33,3 +35,5 @@ export default class EventLog extends Component {
         this.scrollToBottom();
       }
 }
+
+export default withTranslation()(EventLog);

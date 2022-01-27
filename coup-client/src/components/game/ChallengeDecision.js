@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
+import { withTranslation } from 'react-i18next';
 
-export default class ChallengeDecision extends Component {
+class ChallengeDecision extends Component {
 
     // constructor(props) {
     //     super(props)
@@ -21,24 +22,28 @@ export default class ChallengeDecision extends Component {
     }
 
     challengeText = (action, source, target) => {
+        const { t } = this.props;
         if(action === 'steal') {
-            return <p><b>{source}</b> is trying to Steal from <b>{target}</b></p>
+            return <p><b>{source}</b> {t('game.challengeDecision.trySteal')} <b>{target}</b></p>
         }else if(action === 'tax') {
-            return <p><b>{source}</b> is trying to collect Tax (3 coins)</p>
+            return <p><b>{source}</b> {t('game.challengeDecision.tryTax')})</p>
         }else if(action === 'assassinate') {
-            return <p><b>{source}</b> is trying to Assassinate <b>{target}</b></p>
+            return <p><b>{source}</b> {t('game.challengeDecision.tryAssassination')} <b>{target}</b></p>
         }else if(action === 'exchange') {
-            return <p><b>{source}</b> is trying to Exchange their influences</p>
+            return <p><b>{source}</b> {t('game.challengeDecision.tryExchange')}</p>
         }
     }
 
     render() {
+        const { t } = this.props;
         return (
             <>
                 {this.challengeText(this.props.action.action, this.props.action.source, this.props.action.target)}
-                <button onClick={() => this.vote(true)}>Challenge</button>
+                <button onClick={() => this.vote(true)}>{t('game.challengeDecision.challenge')}</button>
                 {/* <button onClick={() => this.vote(false)}>Pass</button> */}
             </>
         )
     }
 }
+
+export default withTranslation()(ChallengeDecision);

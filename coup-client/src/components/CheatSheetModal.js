@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
+import {withTranslation} from 'react-i18next';
 import ReactModal from 'react-modal';
 import CheatSheet from '../assets/CheatSheet.svg'
 
-export default class CheatSheetModal extends Component {
+class CheatSheetModal extends Component {
 
     constructor(props) {
         super(props)
@@ -21,10 +22,11 @@ export default class CheatSheetModal extends Component {
     }
     
     render() {
+        const { t } = this.props;
         return (
             <>
             <div className="CheatSheet" onClick={this.handleOpenCheatSheetModal}>
-                <p>Cheat Sheet</p>  
+                <p>{t('cheatsheet.title')}</p>  
                 <svg className="InfoIcon"xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 21 22">
                     <g id="more_info" data-name="more info" transform="translate(-39 -377)">
                         <g id="Ellipse_1" data-name="Ellipse 1" className="cls-1" transform="translate(39 377)">
@@ -64,3 +66,5 @@ export default class CheatSheetModal extends Component {
         )
     }
 }
+
+export default withTranslation()(CheatSheetModal);

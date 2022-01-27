@@ -1,5 +1,4 @@
 import React from 'react';
-import logo from './logo.svg';
 import CreateGame from './components/CreateGame';
 import './App.css';
 import ReactGA from 'react-ga';
@@ -8,10 +7,10 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link
 } from "react-router-dom";
 import JoinGame from './components/JoinGame';
 import Home from './components/Home';
+import Language from './components/Language';
 
 const trackingId = process.env.REACT_APP_GOOGLE_TRACKING_ID || '';
 ReactGA.initialize(trackingId);
@@ -36,7 +35,7 @@ function App() {
           </Switch>
         </div>
       </Router>
-      
+      <p className="languageContainer"><Language /></p>
     </div>
   );
 }

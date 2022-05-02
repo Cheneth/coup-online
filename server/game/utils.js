@@ -6,13 +6,12 @@ buildDeck = () => {
     for (let card of cardNames) {
         addToDeck(card, deck);
     }
-    for(let i = 0; i < deck.length*2; i++) {
-        const one = Math.floor(Math.random()*(deck.length-1));
-        const two = Math.floor(Math.random()*(deck.length-1));
-        let temp = deck[one];
-        deck[one] = deck[two];
-        deck[two] = temp;
-    }
+
+    deck = deck
+        .map((value) => ({ value, sort: Math.random() }))
+        .sort((a, b) => a.sort - b.sort)
+        .map(({ value }) => value);
+
     return deck;
 }
 

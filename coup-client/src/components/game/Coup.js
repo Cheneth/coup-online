@@ -12,6 +12,7 @@ import EventLog from './EventLog';
 import ReactModal from 'react-modal';
 import CheatSheetModal from '../CheatSheetModal';
 import RulesModal from '../RulesModal';
+import Icons from './icons';
 
 export default class Coup extends Component {
 
@@ -219,7 +220,7 @@ export default class Coup extends Component {
     influenceColorMap = {
         duke: '#D55DC7',
         captain: '#80C6E5',
-        assassin: '#2B2B2B',
+        assassin: '#3B3B3B',
         contessa: '#E35646',
         ambassador: '#B4CA1F'
     }
@@ -279,8 +280,10 @@ export default class Coup extends Component {
                 {this.state.players[this.state.playerIndex].influences.map((influence, index) => {
                     return  <div key={index} className="InfluenceUnitContainer">
                                 <span className="circle" style={{backgroundColor: `${this.influenceColorMap[influence]}`}}></span>
-                                <br></br>
-                                <h3>{influence}</h3>
+                              <h3>{influence}</h3>
+                              <div>{Icons[`${influence}_all`].map((icon, icon_index) => {
+                                  return <img key={icon_index} src={icon} alt="Influence Skill"/>
+                              })}</div>
                             </div>
                     })
                 }

@@ -179,6 +179,12 @@
     line-height: 30%;
     display: inline-block;
 }
+.InfluenceUnitContainer img{
+  width: 40px;
+  border: 2px solid black;
+  border-radius: 2px;
+  margin: 2px;
+}
 
 .CurrentPlayer {
     text-align: right;
@@ -278,22 +284,39 @@
     background-color: #bbb;
     border-radius: 50%;
     display: inline-block;
-  }
+}
+
+.DecisionButtonsContainer {
+  display: flex;
+  justify-content: center;
+}
+
+.DecisionsSection {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
 .DecisionsSection button {
     min-width: 100px;
-    height: 30px;
     border-radius: 5px;
     font-family: 'Muli', sans-serif;
     background-color: #BCBCBC;
     border: none;
     color: white;
     margin: 20px;
-    margin-bottom: 0px;
-    text-align: left;
+    margin-bottom: 2px;
     text-decoration: none;
-    display: inline-block;
-    font-size: 12px;
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    font-size: 24px;
 }
+
+.DecisionsSection img {
+  width: 120px;
+}
+
 #captain {
     background-color: #80C6E5;
 }
@@ -301,7 +324,7 @@
     background-color: #D55DC7;
 }
 #assassin {
-    background-color: #2B2B2B;
+    background-color: #3B3B3B;
 }
 #contessa {
     background-color: #E35646;
@@ -309,24 +332,20 @@
 #ambassador {
     background-color: #B4CA1F;
 }
-#captain-color {
+.captain-color {
   color: #80C6E5;
 }
-#duke-color {
+.duke-color {
   color: #D55DC7;
 }
-#assassin-color {
-  color: #2B2B2B;
+.assassin-color {
+  color: #3B3B3B;
 }
-#contessa-color {
+.contessa-color {
   color: #E35646;
 }
-#ambassador-color {
+.ambassador-color {
   color: #B4CA1F;
-}
-.DecisionTitle {
-    text-align: left;
-    margin-left: 22px;
 }
 
 @media only screen and (min-width: 1024px) {
@@ -370,12 +389,13 @@
     .GameHeader {
         height: 15VH;
     }
-    .DecisionTitle {
-        margin-left: 10VW;
-    }
     .DecisionButtonsContainer  {
         text-align: center;
         width: 80%;
         margin-left: 10%;
     }
   }
+
+.block_action {
+  background: #eebbbb
+}
